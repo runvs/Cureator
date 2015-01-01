@@ -43,7 +43,7 @@ class Ingredient  extends FlxObject
 	
 	public function onDown(spr:FlxSprite):Void 
 	{
-		if (!_isNextIngredient)
+		if (!_isNextIngredient && alive)
 		{
 			var p :FlxPoint = new FlxPoint(x - FlxG.mouse.x, y - FlxG.mouse.y);
 			_state.setActiveIngredient(this, p);
@@ -58,7 +58,7 @@ class Ingredient  extends FlxObject
 	
 	public function onOver(spr:FlxSprite):Void 
 	{
-		if (!_isNextIngredient)
+		if (!_isNextIngredient && alive)
 		{
 		_sprite = GetSpriteFromColor(Color.White);
 		spr.updateHitbox();
@@ -67,7 +67,7 @@ class Ingredient  extends FlxObject
 	
 	public function onOut(spr:FlxSprite):Void 
 	{
-		if (!_isNextIngredient)
+		if (!_isNextIngredient && alive)
 		{
 		_sprite = GetSpriteFromColor(_col);
 		spr.updateHitbox();

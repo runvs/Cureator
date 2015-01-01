@@ -101,9 +101,9 @@ class PlayState extends FlxState
 					var p : Potion = _listPotions.members[i];
 					if (FlxG.overlap(_activeIngredient._hitBox, p._hitBox))
 					{	
-						trace ("overlap");
+						trace ("dropped");
 						p.AddIngedient(_activeIngredient);
-						
+						_activeIngredient.setPosition( -500, -500);
 						dropped = true;
 						break;
 					}
@@ -111,7 +111,7 @@ class PlayState extends FlxState
 				
 				if (dropped)
 				{
-					_ingredientActive = _ingredientNext;
+					SwapIngredients();
 					_ingredientNext = SpawnNewIngredient();
 				}
 				else
@@ -135,9 +135,18 @@ class PlayState extends FlxState
 		
 	}	
 	
+	private function SwapIngredients () : Void 
+	{
+		_ingredientActive = _ingredientNext;
+		_ingredientActive.setPosition(300, 100);
+		_ingredientActive._isNextIngredient = false;
+	}
+	
+	
 	public function SpawnNewIngredient():Ingredient
 	{
 		var i : Ingredient = new Ingredient(300, 50, Color.Cyan, this);
+		i._isNextIngredient = true;
 		return i;
 	}
 	
