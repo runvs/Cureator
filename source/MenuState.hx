@@ -16,7 +16,9 @@ using flixel.util.FlxSpriteUtil;
 class MenuState extends FlxState
 {
 	
-	private var _background :FlxSprite;
+	private var _background : FlxSprite;
+	
+	private var _btn : FlxButton;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -30,9 +32,19 @@ class MenuState extends FlxState
 		//_spr.origin.set();
 		_background.setGraphicSize(786, 512);
 		_background.screenCenter();
+		
+		_btn = new FlxButton(0, 0, "StartGame", StartGame);
+		_btn.screenCenter();
 	}
 	
+	public function StartGame(): Void 
+	{
+		FlxG.switchState(new PlayState());
+	}
+	
+	
 	/**
+	 * 
 	 * Function that is called when this state is destroyed - you might want to 
 	 * consider setting all objects this state uses to null to help garbage collection.
 	 */
@@ -47,6 +59,8 @@ class MenuState extends FlxState
 	override public function update():Void
 	{
 		super.update();
+		_background.update();
+		_btn.update();
 	}	
 	
 	override public function draw():Void
@@ -54,5 +68,6 @@ class MenuState extends FlxState
 		super.draw();
 		FlxG.camera.fill( FlxColorUtil.makeFromARGB(1.0, 64, 64, 64));
 		_background.draw();
+		_btn.draw();
 	}
 }
