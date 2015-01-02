@@ -33,13 +33,13 @@ class PlayState extends FlxState
 		super.create();
 		_listPotions = new FlxTypedGroup<Potion>();
 		
-		_listPotions.add(new Potion(100, 100, Color.None,this));
-		_listPotions.add(new Potion(150, 100, Color.None,this));
-		_listPotions.add(new Potion(200, 100, Color.None, this));
+		_listPotions.add(new Potion(GameProperties.PotionPosition1.x, GameProperties.PotionPosition1.y, Color.None,this));
+		_listPotions.add(new Potion(GameProperties.PotionPosition2.x, GameProperties.PotionPosition2.y, Color.None,this));
+		_listPotions.add(new Potion(GameProperties.PotionPosition3.x, GameProperties.PotionPosition3.y, Color.None, this));
 		
-		_ingredientActive = new Ingredient(300, 100, Color.Red, this);
+		_ingredientActive = new Ingredient(GameProperties.IngredientPositionActive.x, GameProperties.IngredientPositionActive.y, Color.Red, this);
 		_ingredientActive._isNextIngredient = false;
-		_ingredientNext = new Ingredient(300, 50, Color.Green, this);
+		_ingredientNext = new Ingredient(GameProperties.IngredientPositionNext.x, GameProperties.IngredientPositionNext.y, Color.Green, this);
 		_ingredientNext ._isNextIngredient = true;
 		
 		_activePotion = null;
@@ -89,7 +89,17 @@ class PlayState extends FlxState
 			_activeIngredient.setPosition(FlxG.mouse.x + _activeIngredientOffset.x, FlxG.mouse.y + _activeIngredientOffset.y);
 		}
 		
-		if (FlxG.mouse.justReleased)
+		if (FlxG.mouse.justPressed)
+		{
+			// check active ingredient
+			if (_ingredientActive._hitBox.overlapsPoint(FlxG.mouse))
+			{
+				var p :FlxPoint = new FlxPoint(_ingredientActive.x - FlxG.mouse.x, _ingredientActive.y - FlxG.mouse.y);
+				setActiveIngredient(_ingredientActive, p);
+			}
+		}
+		
+		else if (FlxG.mouse.justReleased)
 		{
 			trace ("mouse released");
 			if (_activeIngredient != null)
@@ -103,6 +113,7 @@ class PlayState extends FlxState
 					{	
 						trace ("dropped");
 						p.AddIngedient(_activeIngredient);
+						p.updateColor();
 						_activeIngredient.setPosition( -500, -500);
 						dropped = true;
 						break;
@@ -138,14 +149,14 @@ class PlayState extends FlxState
 	private function SwapIngredients () : Void 
 	{
 		_ingredientActive = _ingredientNext;
-		_ingredientActive.setPosition(300, 100);
+		_ingredientActive.setPosition(GameProperties.IngredientPositionActive.x, GameProperties.IngredientPositionActive.y);
 		_ingredientActive._isNextIngredient = false;
 	}
 	
 	
 	public function SpawnNewIngredient():Ingredient
 	{
-		var i : Ingredient = new Ingredient(300, 50, Color.Cyan, this);
+		var i : Ingredient = new Ingredient(GameProperties.IngredientPositionNext.x, GameProperties.IngredientPositionNext.y, Color.Cyan, this);
 		i._isNextIngredient = true;
 		return i;
 	}
@@ -172,6 +183,7 @@ class PlayState extends FlxState
 	
 	public function setActiveIngredient (i:Ingredient, offs:FlxPoint) : Void 
 	{
+		trace ("set active ingredient");
 		_activeIngredient = i;
 		_activeIngredientOffset = offs;
 	}

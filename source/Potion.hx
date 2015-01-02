@@ -40,7 +40,7 @@ class Potion extends FlxObject
 		
 		
 		
-		MouseEventManager.add(this._hitBox, onDown, onUp, onOver, onOut);
+		//MouseEventManager.add(this._hitBox, onDown, onUp, onOver, onOut);
 		
 	}
 	
@@ -65,8 +65,7 @@ class Potion extends FlxObject
 	
 	public function onOut(spr:FlxSprite):Void 
 	{
-		_sprite = GetSpriteFromColor(_col);
-		spr.updateHitbox();
+		updateColor();
 	}
 	
 	
@@ -127,6 +126,12 @@ class Potion extends FlxObject
 	public function Break():Void
 	{
 		
+	}
+	
+	public function updateColor():Void
+	{
+		_sprite = GetSpriteFromColor(_col);
+		_sprite.updateHitbox();
 	}
 	
 	

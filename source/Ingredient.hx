@@ -36,7 +36,7 @@ class Ingredient  extends FlxObject
 		_sprite = new FlxSprite(0, 0);
 		_sprite = GetSpriteFromColor(_col);
 		
-		MouseEventManager.add(this._hitBox, onDown, onUp, onOver, onOut);
+		MouseEventManager.add(this._hitBox, null, null, onOver, onOut);
 		
 	}
 	
@@ -60,8 +60,8 @@ class Ingredient  extends FlxObject
 	{
 		if (!_isNextIngredient && alive)
 		{
-		_sprite = GetSpriteFromColor(Color.White);
-		spr.updateHitbox();
+			_sprite = GetSpriteFromColor(Color.White);
+			spr.updateHitbox();
 		}
 	}
 	
@@ -93,6 +93,8 @@ class Ingredient  extends FlxObject
 		
 		_hitBox.x = x;
 		_hitBox.y = y;
+		
+		
 	}
 	
 	
