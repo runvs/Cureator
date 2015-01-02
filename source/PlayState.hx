@@ -5,6 +5,8 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxTypedGroup;
 import flixel.text.FlxText;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
@@ -97,6 +99,17 @@ class PlayState extends FlxState
 				var p :FlxPoint = new FlxPoint(_ingredientActive.x - FlxG.mouse.x, _ingredientActive.y - FlxG.mouse.y);
 				setActiveIngredient(_ingredientActive, p);
 			}
+			
+			// check any of the Potions
+			for ( i in 0 ... _listPotions.length)
+			{
+				var p : Potion = _listPotions.members[i];
+				if (p._hitBox.overlapsPoint(FlxG.mouse))
+				{
+					var off :FlxPoint = new FlxPoint(p.x - FlxG.mouse.x, p.y - FlxG.mouse.y);
+					setActivePotion(p, off);
+				}
+			}
 		}
 		
 		else if (FlxG.mouse.justReleased)
@@ -115,6 +128,7 @@ class PlayState extends FlxState
 						p.AddIngedient(_activeIngredient);
 						p.updateColor();
 						_activeIngredient.setPosition( -500, -500);
+						_activeIngredient._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
 						dropped = true;
 						break;
 					}
@@ -127,12 +141,12 @@ class PlayState extends FlxState
 				}
 				else
 				{
-					// snap back ingredient
+					FlxTween.tween(_activeIngredient, { x:GameProperties.IngredientPositionActive.x, y:GameProperties.IngredientPositionActive.y }, 0.75, {ease:FlxEase.circOut});
 				}
 			}
 			else if (_activePotion != null)
 			{
-				// TODO Snap back Potion
+				FlxTween.tween(_activePotion, { x:_activePotion._originalPosition.x, y:_activePotion._originalPosition.y }, 0.75, {ease:FlxEase.circOut});
 			}
 			
 			_activePotion = null;

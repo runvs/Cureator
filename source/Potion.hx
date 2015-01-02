@@ -24,23 +24,26 @@ class Potion extends FlxObject
 	
 	private var _state : PlayState;
 	
-	
+	public var _originalPosition : FlxPoint;
 
-	public function new(X:Float=0, Y:Float=0, c:Color, state:PlayState ) 
+
+	public function new(X:Float=0, Y:Float=0, c:Color , state:PlayState ) 
 	{
 		super(X, Y);
 		_col = c;
-		_fill = FillState.Empty;
-		
 		_state = state;
+		
+		_fill = FillState.Empty;
 		
 		_sprite = GetSpriteFromColor(_col);
 		_hitBox = new FlxSprite(0, 0);
 		_hitBox.makeGraphic(48, 48);
 		
+		_originalPosition = new FlxPoint(x, y);
 		
 		
-		//MouseEventManager.add(this._hitBox, onDown, onUp, onOver, onOut);
+		
+		MouseEventManager.add(this._hitBox, null, null , onOver, onOut);
 		
 	}
 	
