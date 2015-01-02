@@ -28,9 +28,8 @@ class MenuState extends FlxState
 		super.create();
 		
 		_background = new FlxSprite();
-		_background.loadGraphic(AssetPaths.sample__png, false, 192, 128);
+		_background.loadGraphic(AssetPaths.potions_samplecolor__png, false, 477, 577);
 		//_spr.origin.set();
-		_background.setGraphicSize(786, 512);
 		_background.screenCenter();
 		
 		_btn = new FlxButton(0, 0, "StartGame", StartGame);

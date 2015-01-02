@@ -25,6 +25,10 @@ class PlayState extends FlxState
 	private var _activePotion : Potion;
 	private var _activePotionOffset : FlxPoint;
 	
+	private var _backgroundSprite : FlxSprite;
+	
+	private var _pourIngredient : Ingredient;
+	
 	private var _activeIngredient : Ingredient;
 	private var _activeIngredientOffset : FlxPoint;
 	/**
@@ -35,9 +39,10 @@ class PlayState extends FlxState
 		super.create();
 		_listPotions = new FlxTypedGroup<Potion>();
 		
-		_listPotions.add(new Potion(GameProperties.PotionPosition1.x, GameProperties.PotionPosition1.y, Color.None,this));
-		_listPotions.add(new Potion(GameProperties.PotionPosition2.x, GameProperties.PotionPosition2.y, Color.None,this));
+		_listPotions.add(new Potion(GameProperties.PotionPosition1.x, GameProperties.PotionPosition1.y, Color.None, this));
+		_listPotions.add(new Potion(GameProperties.PotionPosition2.x, GameProperties.PotionPosition2.y, Color.None, this));
 		_listPotions.add(new Potion(GameProperties.PotionPosition3.x, GameProperties.PotionPosition3.y, Color.None, this));
+		_listPotions.add(new Potion(GameProperties.PotionPosition4.x, GameProperties.PotionPosition4.y, Color.None, this));
 		
 		_ingredientActive = new Ingredient(GameProperties.IngredientPositionActive.x, GameProperties.IngredientPositionActive.y, Color.Red, this);
 		_ingredientActive._isNextIngredient = false;
@@ -49,6 +54,12 @@ class PlayState extends FlxState
 		
 		_activeIngredient = null;
 		_activeIngredientOffset = new FlxPoint();
+		
+		
+		_backgroundSprite = new FlxSprite();
+		_backgroundSprite.loadGraphic(AssetPaths.sampletambev2black__png, false, 192, 128);
+		_backgroundSprite.scale.set(4, 4);
+		_backgroundSprite.origin.set();
 		
 	}
 	
@@ -114,23 +125,25 @@ class PlayState extends FlxState
 		
 		else if (FlxG.mouse.justReleased)
 		{
-			trace ("mouse released");
-			if (_activeIngredient != null)
+			//trace ("mouse released");
+			if (_activeIngredient != null && _activeIngredient.active == true)
 			{
-				trace ("active ingredient");
+				//trace ("active ingredient");
 				var dropped :Bool = false;
 				for ( i in 0 ... _listPotions.length)
 				{
 					var p : Potion = _listPotions.members[i];
 					if (FlxG.overlap(_activeIngredient._hitBox, p._hitBox))
 					{	
-						trace ("dropped");
+						//trace ("dropped");
 						dropped = true;
 						p.AddIngedient(_activeIngredient);
 						p.updateColor();
 						_activeIngredient.setPosition( -500, -500);
 						_activeIngredient._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
-						
+						_activeIngredient.Pour();
+						_pourIngredient = _activeIngredient;
+						_activeIngredient = null;
 						break;
 					}
 				}
@@ -159,6 +172,11 @@ class PlayState extends FlxState
 		_ingredientActive.update();
 		_ingredientNext.update();
 		
+		if (_pourIngredient != null && _pourIngredient.active)
+		{
+			_pourIngredient.update();
+		}
+		
 	}	
 	
 	private function SwapIngredients () : Void 
@@ -171,7 +189,7 @@ class PlayState extends FlxState
 	
 	public function SpawnNewIngredient():Ingredient
 	{
-		var i : Ingredient = new Ingredient(GameProperties.IngredientPositionNext.x, GameProperties.IngredientPositionNext.y, Color.Cyan, this);
+		var i : Ingredient = new Ingredient(GameProperties.IngredientPositionNext.x, GameProperties.IngredientPositionNext.y, Color.Blue, this);
 		i._isNextIngredient = true;
 		return i;
 	}
@@ -179,15 +197,31 @@ class PlayState extends FlxState
 	
 	override public function draw () : Void 
 	{
+		_backgroundSprite.draw();
 		_listPotions.draw();
 		
 		_ingredientActive.draw();
 		_ingredientNext.draw();
+		if (_pourIngredient != null && _pourIngredient.active)
+		{
+			_pourIngredient.draw();
+		}
 	}
 	
 	public function AddPotion (p:Potion):Void
 	{
 		_listPotions.add(p);
+	}
+	
+	public function ResetActivePotion () : Void 
+	{
+		_activePotion = null;
+	}
+	
+	public function ResetActiveIngredient () : Void 
+	{
+		_activeIngredient = null;
+		_pourIngredient = null;
 	}
 	
 	public function setActivePotion (p:Potion, offs:FlxPoint) : Void
@@ -198,7 +232,7 @@ class PlayState extends FlxState
 	
 	public function setActiveIngredient (i:Ingredient, offs:FlxPoint) : Void 
 	{
-		trace ("set active ingredient");
+		//trace ("set active ingredient");
 		_activeIngredient = i;
 		_activeIngredientOffset = offs;
 	}

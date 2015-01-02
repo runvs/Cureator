@@ -25,6 +25,8 @@ class Potion extends FlxObject
 	private var _state : PlayState;
 	
 	public var _originalPosition : FlxPoint;
+	
+	private var _complete :Bool;
 
 
 	public function new(X:Float=0, Y:Float=0, c:Color , state:PlayState ) 
@@ -37,11 +39,11 @@ class Potion extends FlxObject
 		
 		_sprite = GetSpriteFromColor(_col);
 		_hitBox = new FlxSprite(0, 0);
-		_hitBox.makeGraphic(48, 48);
+		_hitBox.makeGraphic(64, 64, FlxColorUtil.makeFromARGB(0.0,1,1,1));
 		
 		_originalPosition = new FlxPoint(x, y);
 		
-		
+		_complete = false;
 		
 		MouseEventManager.add(this._hitBox, null, null , onOver, onOut);
 		
@@ -102,8 +104,8 @@ class Potion extends FlxObject
 	
 	public function AddIngedient(i:Ingredient):Void
 	{
-		trace ("old color: " + _col);
-		trace ("add color: " + i._col);
+		//trace ("old color: " + _col);
+		//trace ("add color: " + i._col);
 		if (_fill == FillState.Three)
 		{
 			Break();
@@ -149,9 +151,56 @@ class Potion extends FlxObject
 	{
 		var spr : FlxSprite = new FlxSprite();
 		
-		spr.makeGraphic(16, 16, ColorManagement.GetIntFromEnum(c));
-		spr.scale.set(3, 3);
 		
+		
+		if (c == Color.Red)
+		{
+			spr.loadGraphic(AssetPaths.potion_red__png, true, 16, 16);
+			_complete = true;
+		}
+		else if (c == Color.Green)
+		{
+			spr.loadGraphic(AssetPaths.potion_green__png, true, 16, 16);
+			_complete = true;
+		}
+		else if (c == Color.Blue)
+		{
+			spr.loadGraphic(AssetPaths.potion_blue__png, true, 16, 16);
+			_complete = true;
+		}
+		else if (c == Color.None)
+		{
+			spr.loadGraphic(AssetPaths.potion_empty____png, true, 16, 16);
+		}
+		else 
+		{
+			spr.makeGraphic(16, 16, ColorManagement.GetIntFromEnum(c));
+			_complete = false;
+		}
+		
+		if ( _complete && c != Color.None)
+		{
+			spr.animation.add ("One", [0], 30, true);
+			spr.animation.add ("Two", [1], 30, true);
+			spr.animation.add ("Three", [2], 30, true);
+		}
+		
+		if (_complete)
+		{
+			if (_fill == FillState.One)
+			{
+				spr.animation.play("One");
+			}
+			else if (_fill == FillState.Two)
+			{
+				spr.animation.play("Two");
+			}
+			else if (_fill == FillState.Three)
+			{
+				spr.animation.play("Three");
+			}
+		}
+		spr.scale.set(4, 4);
 		spr.updateHitbox();
 		
 		return spr;
