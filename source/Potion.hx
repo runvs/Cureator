@@ -102,6 +102,8 @@ class Potion extends FlxObject
 	
 	public function AddIngedient(i:Ingredient):Void
 	{
+		trace ("old color: " + _col);
+		trace ("add color: " + i._col);
 		if (_fill == FillState.Three)
 		{
 			Break();
@@ -111,20 +113,25 @@ class Potion extends FlxObject
 		else if (_fill == FillState.Empty)
 		{
 			_fill = FillState.One;
+			_col = i._col;
 		}
 		else if (_fill == FillState.One)
 		{
 			_fill = FillState.Two;
+			_col = ColorManagement.CombineColors(_col, i._col);
 		}
 		else if (_fill == FillState.Two)
 		{
 			_fill = FillState.Three;
+			_col = ColorManagement.CombineColors(_col, i._col);
 		}
 		
-		_col = i._col;
-		// TODO advanced color handling
-		
+		updateColor();
 	}
+	
+	
+	
+	
 	
 	public function Break():Void
 	{
@@ -142,7 +149,7 @@ class Potion extends FlxObject
 	{
 		var spr : FlxSprite = new FlxSprite();
 		
-		spr.makeGraphic(16, 16, ColorManagement.GetColorFromEnum(c));
+		spr.makeGraphic(16, 16, ColorManagement.GetIntFromEnum(c));
 		spr.scale.set(3, 3);
 		
 		spr.updateHitbox();

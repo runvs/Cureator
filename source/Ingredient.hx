@@ -114,7 +114,7 @@ class Ingredient  extends FlxObject
 	{
 		var spr : FlxSprite = new FlxSprite();
 		
-		spr.makeGraphic(16, 16, ColorManagement.GetColorFromEnum(c));
+		spr.makeGraphic(16, 16, ColorManagement.GetIntFromEnum(c));
 		spr.scale.set(2, 2);
 		
 		spr.updateHitbox();

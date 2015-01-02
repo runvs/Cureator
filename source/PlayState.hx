@@ -125,11 +125,12 @@ class PlayState extends FlxState
 					if (FlxG.overlap(_activeIngredient._hitBox, p._hitBox))
 					{	
 						trace ("dropped");
+						dropped = true;
 						p.AddIngedient(_activeIngredient);
 						p.updateColor();
 						_activeIngredient.setPosition( -500, -500);
 						_activeIngredient._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
-						dropped = true;
+						
 						break;
 					}
 				}
