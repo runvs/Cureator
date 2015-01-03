@@ -85,6 +85,7 @@ class PlayState extends FlxState
 		
 		_assistantLeft = new LeftAssistant();
 		
+
 	}
 	
 	/**

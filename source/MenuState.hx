@@ -34,6 +34,13 @@ class MenuState extends FlxState
 		
 		_btn = new FlxButton(0, 0, "StartGame", StartGame);
 		_btn.screenCenter();
+		
+		#if flash
+		FlxG.sound.playMusic(AssetPaths.cureator_OST_v__01__mp3, 1.0, true);
+		#else
+		FlxG.sound.playMusic(AssetPaths.cureator_OST_v__01__ogg, 1.0, true);
+		#end
+		
 	}
 	
 	public function StartGame(): Void 
