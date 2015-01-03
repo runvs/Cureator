@@ -83,7 +83,7 @@ class LeftAssistant extends FlxObject
 	public function Take () : Void
 	{
 		_isInTake = true;
-		trace ("take");
+		//trace ("take");
 		_spriteRed.animation.play("take");
 		_spriteGreen.animation.play("take");
 		_spriteBlue.animation.play("take");
@@ -169,7 +169,7 @@ class LeftAssistant extends FlxObject
 			}
 			else 
 			{
-				trace("center");
+				//trace("center");
 				_spriteRed.animation.play("takeMid", true);
 				_spriteGreen.animation.play("takeMid", true);
 				_spriteBlue.animation.play("takeMid", true);

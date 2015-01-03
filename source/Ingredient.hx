@@ -40,8 +40,6 @@ class Ingredient  extends FlxObject
 		_hitBox = new FlxSprite(0, 0);
 		_hitBox.makeGraphic(64, 64, FlxColorUtil.makeFromARGB(0,1,1,1));
 		
-		MouseEventManager.add(this._hitBox, null, null, onOver, onOut);
-		
 	}
 	
 	public function Pour () : Void 
@@ -49,39 +47,7 @@ class Ingredient  extends FlxObject
 		_sprite.animation.play("pour", true);
 	}
 	
-	
-	public function onDown(spr:FlxSprite):Void 
-	{
-		if (!_isNextIngredient && alive)
-		{
-			var p :FlxPoint = new FlxPoint(x - FlxG.mouse.x, y - FlxG.mouse.y);
-			_state.setActiveIngredient(this, p);
-		}
-		
-	}
-	
-	public function onUp(spr:FlxSprite):Void 
-	{
-		
-	}
-	
-	public function onOver(spr:FlxSprite):Void 
-	{
-		if (!_isNextIngredient && alive)
-		{
-			_sprite.color = FlxColorUtil.makeFromARGB(1.0, 200, 200, 200);
-		}
-	}
-	
-	public function onOut(spr:FlxSprite):Void 
-	{
-		if (!_isNextIngredient && alive)
-		{
-			_sprite.color = FlxColorUtil.makeFromARGB(1.0, 255, 255, 255);
-		}
-	}
-	
-	
+
 	public function getColor () : Color 
 	{
 		return _col;

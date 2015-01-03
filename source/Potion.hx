@@ -45,7 +45,6 @@ class Potion extends FlxObject
 		
 		_complete = false;
 		
-		
 	}
 	
 
@@ -103,10 +102,7 @@ class Potion extends FlxObject
 		updateColor();
 	}
 	
-	
-	
-	
-	
+
 	public function Break():Void
 	{
 		alive = false;

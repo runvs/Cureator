@@ -20,6 +20,7 @@ import flixel.util.FlxTimer;
  */
 class PlayState extends FlxState
 {
+	private var _listPatients : FlxTypedGroup<Patient>;
 	
 	private var _listPotions : FlxTypedGroup<Potion>;
 	private var _ingredientActive : Ingredient;
@@ -50,6 +51,10 @@ class PlayState extends FlxState
 		_listPotions.add(new Potion(GameProperties.PotionPosition2.x, GameProperties.PotionPosition2.y, Color.None, this));
 		_listPotions.add(new Potion(GameProperties.PotionPosition3.x, GameProperties.PotionPosition3.y, Color.None, this));
 		_listPotions.add(new Potion(GameProperties.PotionPosition4.x, GameProperties.PotionPosition4.y, Color.None, this));
+		
+		_listPatients = new FlxTypedGroup<Patient>();
+		SpawnNewPatient();
+		
 		
 		_ingredientActive = new Ingredient(GameProperties.IngredientPositionActive.x, GameProperties.IngredientPositionActive.y, Color.Red, this);
 		_ingredientActive._isNextIngredient = false;
@@ -96,6 +101,12 @@ class PlayState extends FlxState
 			_listPotions.forEach(function(p:Potion) { if (p.alive) { newPotionList.add(p); } else { p.destroy(); } } );
 			_listPotions = newPotionList;
 		}
+		
+		{
+			var newPatientList:FlxTypedGroup<Patient> = new FlxTypedGroup<Patient>();
+			_listPatients.forEach(function(p:Patient) { if (p.alive) { newPatientList.add(p); } else { p.destroy(); } } );
+			_listPatients = newPatientList;
+		}
 	}
 	
 	
@@ -107,14 +118,21 @@ class PlayState extends FlxState
 	{
 		super.update();
 		
-		CleanUp();
 		
+		//// Input
 		if (FlxG.keys.anyJustPressed(["F10"]))
 		{
 			_switchBackground = ! _switchBackground;
 		}
 		
+		
+		//// Cleaning Up
+		CleanUp();
+		
+
+		//// Update Block
 		_assistantLeft.update();
+		_listPatients.update();
 		
 		if (_activePotion != null)
 		{
@@ -147,7 +165,7 @@ class PlayState extends FlxState
 			}
 		}
 		
-		else if (FlxG.mouse.justReleased)
+		if (FlxG.mouse.justReleased)
 		{
 			//trace ("mouse released");
 			if (_activeIngredient != null && _activeIngredient.active == true)
@@ -253,6 +271,13 @@ class PlayState extends FlxState
 		);
 	}
 	
+	public function SpawnNewPatient ( ) : Void 
+	{
+		var p : Patient  = new Patient(this);
+		_listPatients.add(p);
+		var t : FlxTimer  = new FlxTimer(GameProperties.PatientSpawnTime, function (x:FlxTimer) : Void { SpawnNewPatient(); } );
+	}
+	
 	
 	override public function draw () : Void 
 	{
@@ -265,6 +290,8 @@ class PlayState extends FlxState
 			_backgroundSprite1.draw();
 		}
 		_listPotions.draw();
+		
+		_listPatients.draw();
 		
 		_assistantLeft.draw();
 		
