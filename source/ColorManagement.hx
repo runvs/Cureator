@@ -91,14 +91,14 @@ class ColorManagement
 		
 
 	
-		//Pink;		// Red + Blue
-		//Magenta;	// Red + Red + Blue
+		//Magenta;		// Red + Blue
+		//Pink;			// Red + Red + Blue
 		//Purple;		// Red + Blue + Blue
-		else if (c == Color.Pink)
+		else if (c == Color.Magenta)
 		{
 			return 20;
 		}
-		else if (c == Color.Magenta)
+		else if (c == Color.Pink)
 		{
 			return 200;
 		}
@@ -177,7 +177,7 @@ class ColorManagement
 			}
 			if (c1 == Color.Red && c2 == Color.Blue)
 			{
-				c3 = Color.Pink;
+				c3 = Color.Magenta;
 			}
 			if (c1 == Color.Green && c2 == Color.Blue)
 			{
@@ -207,11 +207,11 @@ class ColorManagement
 			
 			if (c1 == Color.Red && c2 == Color.Blue) // two red, blue
 			{
-				c3 = Color.Magenta;
+				c3 = Color.Pink;
 			}
-			if (c1 == Color.Pink && c2 == Color.Red) // Pink (red + blue), red
+			if (c1 == Color.Magenta && c2 == Color.Red) // Pink (red + blue), red
 			{
-				c3 = Color.Magenta;
+				c3 = Color.Pink;
 			}
 			
 			if (c1 == Color.Blue && c2 == Color.Red) // two blue, red
@@ -245,7 +245,7 @@ class ColorManagement
 			{
 				c3 = Color.White;
 			}
-			if (c1 == Color.Pink && c2 == Color.Green)
+			if (c1 == Color.Magenta && c2 == Color.Green)
 			{
 				c3 = Color.White;
 			}

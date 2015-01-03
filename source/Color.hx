@@ -15,8 +15,8 @@ enum Color
 	Orange;		// Red + Red + Green
 	YellowGreen;// Red + Green + Green
 	
-	Pink;		// Red + Blue
-	Magenta;	// Red + Red + Blue
+	Magenta;	// Red + Blue
+	Pink;		// Red + Red + Blue
 	Purple;		// Red + Blue + Blue
 
 	Cyan;		// Green + Blue

@@ -173,10 +173,16 @@ class Patient extends FlxObject
 		if ( p._col == _col)
 		{
 			_success = true;
+			
+			_targetPosition = GameProperties.PatientExitPosition;
+		}
+		else 
+		{
+			_success = false;
+			_targetPosition = GameProperties.PatientSpawnPosition;
 		}
 		
 		// make him move
-		_targetPosition = GameProperties.PatientExitPosition;
 		
 		var distance : FlxVector = new FlxVector();
 		distance.set(_targetPosition.x - x, _targetPosition.y - y );
