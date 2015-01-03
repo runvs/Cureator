@@ -242,9 +242,15 @@ class PlayState extends FlxState
 			_ingredientActive._doDraw = true;
 		} 
 		);
-		
-		
-		
+	}
+	
+	public function SpawnNewJar (p:FlxPoint) : Void 
+	{
+		var t : FlxTimer = new FlxTimer(GameProperties.JarSpawnTime, function (t:FlxTimer) : Void 
+		{
+			_listPotions.add(new Potion(p.x, p.y, Color.None, this));
+		} 
+		);
 	}
 	
 	

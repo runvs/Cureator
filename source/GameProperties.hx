@@ -16,4 +16,6 @@ class GameProperties
 	public static var IngredientPositionNext : FlxPoint = new FlxPoint(0, 448);
 	public static var IngredientPositionActive : FlxPoint = new FlxPoint(96, 224);
 	
+	public static var JarSpawnTime : Float = 1.0;
+	
 }

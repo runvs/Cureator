@@ -83,8 +83,6 @@ class Potion extends FlxObject
 		if (_fill == FillState.Three)
 		{
 			Break();
-			alive = false;
-			exists = false;
 		}
 		else if (_fill == FillState.Empty)
 		{
@@ -111,7 +109,9 @@ class Potion extends FlxObject
 	
 	public function Break():Void
 	{
-		
+		alive = false;
+		exists = false;
+		_state.SpawnNewJar(_originalPosition);
 	}
 	
 	public function updateColor():Void
