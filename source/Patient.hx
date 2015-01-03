@@ -6,6 +6,7 @@ import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColorUtil;
 import flixel.util.FlxPoint;
+import flixel.util.FlxRandom;
 import flixel.util.FlxTimer;
 import flixel.util.FlxVector;
 
@@ -50,9 +51,7 @@ class Patient extends FlxObject
 		x = GameProperties.PatientSpawnPosition.x;
 		y = GameProperties.PatientSpawnPosition.y;
 		
-		_sprite = new FlxSprite ();
-		_sprite.makeGraphic(32, 32, ColorManagement.GetIntFromEnum(_col));
-		_sprite.scale.set(4, 4);
+		GetSpriteFromColor();
 		
 		_hitBox = new FlxSprite();
 		_hitBox.makeGraphic(128, 128, FlxColorUtil.makeFromARGB(0.0, 1, 1, 1));
@@ -104,7 +103,49 @@ class Patient extends FlxObject
 	
 	private function PickRandomColor(dl:DifficultyLevel) : Void
 	{
-		_col = Color.Red;
+		var c : Color;
+		
+		var r : Int = FlxRandom.intRanged(0, 2);
+		
+		if ( r == 0)
+		{
+			c = Color.Red;
+		}
+		else if (r == 1)
+		{
+			c = Color.Green;
+		}
+		else 
+		{
+			c = Color.Blue;
+		}
+		_col = c;
+	}
+	
+	function GetSpriteFromColor():Void 
+	{
+		_sprite = new FlxSprite ();
+		//_sprite.makeGraphic(32, 32, ColorManagement.GetIntFromEnum(_col));
+		
+		_sprite.loadGraphic(AssetPaths.patient_soldier__png, true, 32, 32);
+		_sprite.animation.add("cured", [0], 0, true);
+		_sprite.animation.add("red", [1], 0, true);
+		_sprite.animation.add("green", [2], 0, true);
+		_sprite.animation.add("blue", [3], 0, true);
+		_sprite.scale.set(4, 4);
+		
+		if (_col == Color.Red)
+		{
+			_sprite.animation.play("red");
+		}
+		if (_col == Color.Green)
+		{
+			_sprite.animation.play("green");
+		}
+		if (_col == Color.Blue)
+		{
+			_sprite.animation.play("blue");
+		}
 	}
 	
 	
