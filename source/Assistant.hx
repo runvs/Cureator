@@ -52,20 +52,20 @@ class Assistant extends FlxObject
 			_spriteGreen.origin.set();
 			_spriteBlue.origin.set();
 			
-			_spriteRed.animation.add("idle", [0], 10, true);
-			_spriteRed.animation.add("pick", [0, 1, 2, 3], 7, false);
-			_spriteRed.animation.add("hold", [4], 7, true);
-			_spriteRed.animation.add("take", [5], 7, true);
+			_spriteRed.animation.add("idle", [0], 6, true);
+			_spriteRed.animation.add("pick", [0, 1, 2, 3], 6, false);
+			_spriteRed.animation.add("hold", [4], 6, true);
+			_spriteRed.animation.add("take", [5], 6, true);
 			
-			_spriteGreen.animation.add("idle", [0], 10, true);
-			_spriteGreen.animation.add("pick", [0, 1, 2, 3], 7, false);
-			_spriteGreen.animation.add("hold", [4], 7, false);
-			_spriteGreen.animation.add("take", [5], 7, true);
+			_spriteGreen.animation.add("idle", [0], 6, true);
+			_spriteGreen.animation.add("pick", [0, 1, 2, 3], 6, false);
+			_spriteGreen.animation.add("hold", [4], 6, false);
+			_spriteGreen.animation.add("take", [5], 6, true);
 			
-			_spriteBlue.animation.add("idle", [0], 10, true);
-			_spriteBlue.animation.add("pick", [0, 1, 2, 3], 7, false);
-			_spriteBlue.animation.add("hold", [4], 7, true);
-			_spriteBlue.animation.add("take", [5], 7, true);
+			_spriteBlue.animation.add("idle", [0], 6, true);
+			_spriteBlue.animation.add("pick", [0, 1, 2, 3], 6, false);
+			_spriteBlue.animation.add("hold", [4], 6, true);
+			_spriteBlue.animation.add("take", [5], 6, true);
 			
 			_spriteRed.animation.play("hold");
 			

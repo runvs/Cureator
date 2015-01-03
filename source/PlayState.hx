@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxTypedGroup;
+import flixel.input.keyboard.FlxKeyboard;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -27,7 +28,9 @@ class PlayState extends FlxState
 	private var _activePotion : Potion;
 	private var _activePotionOffset : FlxPoint;
 	
-	private var _backgroundSprite : FlxSprite;
+	private var _backgroundSprite1 : FlxSprite;
+	private var _backgroundSprite2 : FlxSprite;
+	private var _switchBackground : Bool;
 	
 	private var _pourIngredient : Ingredient;
 	
@@ -60,10 +63,17 @@ class PlayState extends FlxState
 		_activeIngredientOffset = new FlxPoint();
 		
 		
-		_backgroundSprite = new FlxSprite();
-		_backgroundSprite.loadGraphic(AssetPaths.sampletambev2black__png, false, 192, 128);
-		_backgroundSprite.scale.set(4, 4);
-		_backgroundSprite.origin.set();
+		_backgroundSprite1 = new FlxSprite();
+		_backgroundSprite1.loadGraphic(AssetPaths.sampletambev2black__png, false, 192, 128);
+		_backgroundSprite1.scale.set(4, 4);
+		_backgroundSprite1.origin.set();
+		
+		_backgroundSprite2 = new FlxSprite();
+		_backgroundSprite2.loadGraphic(AssetPaths.blackbackground__png, false, 192, 128);
+		_backgroundSprite2.scale.set(4, 4);
+		_backgroundSprite2.origin.set();
+		
+		_switchBackground = true;
 		
 		_assistantLeft = new Assistant(true);
 		
@@ -98,6 +108,11 @@ class PlayState extends FlxState
 		super.update();
 		
 		CleanUp();
+		
+		if (FlxG.keys.anyJustPressed(["F10"]))
+		{
+			_switchBackground = ! _switchBackground;
+		}
 		
 		_assistantLeft.update();
 		
@@ -235,7 +250,14 @@ class PlayState extends FlxState
 	
 	override public function draw () : Void 
 	{
-		_backgroundSprite.draw();
+		if (_switchBackground )
+		{
+			_backgroundSprite2.draw();
+		}
+		else 
+		{
+			_backgroundSprite1.draw();
+		}
 		_listPotions.draw();
 		
 		_assistantLeft.draw();
