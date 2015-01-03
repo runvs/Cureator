@@ -151,7 +151,7 @@ class PlayState extends FlxState
 			_pourIngredient.update();
 		}
 		
-		trace (_listPotions.length);
+		//trace (_listPotions.length);
 		
 
 		
@@ -328,7 +328,7 @@ class PlayState extends FlxState
 		
 		var t : FlxTimer = new FlxTimer(GameProperties.JarSpawnTime, function (t:FlxTimer) : Void 
 		{
-			trace ("spawn new jar");
+			//trace ("spawn new jar");
 			_listPotions.add(new Potion(p.x, p.y, Color.None, this));
 		} 
 		);

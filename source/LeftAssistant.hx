@@ -67,7 +67,7 @@ class LeftAssistant extends FlxObject
 		_spriteRed.animation.play("hold");
 		
 		_spriteRed.x = _spriteGreen.x = _spriteBlue.x  = 64;
-		_spriteRed.y = _spriteGreen.y = _spriteBlue.y  = 192;
+		_spriteRed.y = _spriteGreen.y = _spriteBlue.y  = 196;
 		
 		_spriteRed.setFacingFlip(FlxObject.LEFT, true, false);
 		_spriteRed.setFacingFlip(FlxObject.RIGHT, false, false);

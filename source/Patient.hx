@@ -46,7 +46,7 @@ class Patient extends FlxObject
 		
 		_success = false;
 		
-		PickRandomColor();
+		PickRandomColor(DifficultyLevel.Hard);
 		x = GameProperties.PatientSpawnPosition.x;
 		y = GameProperties.PatientSpawnPosition.y;
 		
@@ -102,9 +102,9 @@ class Patient extends FlxObject
 		exists = false;
 	}
 	
-	private function PickRandomColor() : Void
+	private function PickRandomColor(dl:DifficultyLevel) : Void
 	{
-		_col = Color.Red;
+
 	}
 	
 	
