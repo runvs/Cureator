@@ -129,11 +129,42 @@ class PlayState extends FlxState
 		//// Cleaning Up
 		CleanUp();
 		
+		
+		//// Additional Logic
+		MouseFollow();
+		
+		PickupObject();
+		DropObject();
+		
 
 		//// Update Block
 		_assistantLeft.update();
 		_listPatients.update();
+		_listPotions.update();
 		
+		_ingredientActive.update();
+		_ingredientNext.update();
+		
+		// TODO
+		if (_pourIngredient != null && _pourIngredient.active)
+		{
+			_pourIngredient.update();
+		}
+		
+
+		
+	}	
+	
+	private function SwapIngredients () : Void 
+	{
+		_ingredientActive = _ingredientNext;
+		_ingredientActive.setPosition(GameProperties.IngredientPositionActive.x, GameProperties.IngredientPositionActive.y);
+		_ingredientActive._isNextIngredient = false;
+		_ingredientActive._doDraw = false;
+	}
+	
+	function MouseFollow():Void 
+	{
 		if (_activePotion != null)
 		{
 			_activePotion.setPosition(FlxG.mouse.x + _activePotionOffset.x, FlxG.mouse.y + _activePotionOffset.y);
@@ -142,7 +173,10 @@ class PlayState extends FlxState
 		{
 			_activeIngredient.setPosition(FlxG.mouse.x + _activeIngredientOffset.x, FlxG.mouse.y + _activeIngredientOffset.y);
 		}
-		
+	}
+	
+	function PickupObject():Void 
+	{
 		if (FlxG.mouse.justPressed)
 		{
 			// check active ingredient
@@ -164,70 +198,85 @@ class PlayState extends FlxState
 				}
 			}
 		}
-		
+	}
+	
+	function DropIngredient():Void 
+	{
+		if (_activeIngredient != null && _activeIngredient.active == true)
+		{
+			_assistantLeft.Release();
+			//trace ("active ingredient");
+			var dropped :Bool = false;
+			for ( i in 0 ... _listPotions.length)
+			{
+				var p : Potion = _listPotions.members[i];
+				if (FlxG.overlap(_activeIngredient._hitBox, p._hitBox))
+				{	
+					//trace ("dropped");
+					dropped = true;
+					p.AddIngedient(_activeIngredient);
+					p.updateColor();
+					_activeIngredient.setPosition( -500, -500);
+					_activeIngredient._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
+					_activeIngredient.Pour();
+					_pourIngredient = _activeIngredient;
+					_activeIngredient = null;
+					break;
+				}
+			}
+			
+			if (dropped)
+			{
+				SwapIngredients();
+				SpawnNewIngredient();
+			}
+			else
+			{
+
+				FlxTween.tween(_activeIngredient, { x:GameProperties.IngredientPositionActive.x, y:GameProperties.IngredientPositionActive.y }, 0.75, {ease:FlxEase.circOut});
+			}
+		}
+	}
+	
+	function DropPotion():Void 
+	{
+		if (_activePotion != null)
+		{
+			var dropped :Bool = false;
+			for ( i in 0 ... _listPatients.length)
+			{
+				var p : Patient = _listPatients.members[i];
+				if (FlxG.overlap(_activePotion._hitBox, p._hitBox))
+				{	
+					
+					break;
+				}
+			}
+			
+			if ( dropped)
+			{
+				
+			}
+			else
+			{
+				FlxTween.tween(_activePotion, { x:_activePotion._originalPosition.x, y:_activePotion._originalPosition.y }, 0.75, { ease:FlxEase.circOut } );
+			}
+		}
+	}
+	
+	function DropObject():Void 
+	{
 		if (FlxG.mouse.justReleased)
 		{
 			//trace ("mouse released");
-			if (_activeIngredient != null && _activeIngredient.active == true)
-			{
-				_assistantLeft.Release();
-				//trace ("active ingredient");
-				var dropped :Bool = false;
-				for ( i in 0 ... _listPotions.length)
-				{
-					var p : Potion = _listPotions.members[i];
-					if (FlxG.overlap(_activeIngredient._hitBox, p._hitBox))
-					{	
-						//trace ("dropped");
-						dropped = true;
-						p.AddIngedient(_activeIngredient);
-						p.updateColor();
-						_activeIngredient.setPosition( -500, -500);
-						_activeIngredient._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
-						_activeIngredient.Pour();
-						_pourIngredient = _activeIngredient;
-						_activeIngredient = null;
-						break;
-					}
-				}
-				
-				if (dropped)
-				{
-					SwapIngredients();
-					SpawnNewIngredient();
-				}
-				else
-				{
-					FlxTween.tween(_activeIngredient, { x:GameProperties.IngredientPositionActive.x, y:GameProperties.IngredientPositionActive.y }, 0.75, {ease:FlxEase.circOut});
-				}
-			}
-			else if (_activePotion != null)
-			{
-				FlxTween.tween(_activePotion, { x:_activePotion._originalPosition.x, y:_activePotion._originalPosition.y }, 0.75, {ease:FlxEase.circOut});
-			}
+			DropIngredient();
+			
+			
+			DropPotion();
 			
 			_activePotion = null;
 			_activeIngredient = null;
 		}
-		
-		_listPotions.update();
-		
-		_ingredientActive.update();
-		_ingredientNext.update();
-		
-		if (_pourIngredient != null && _pourIngredient.active)
-		{
-			_pourIngredient.update();
-		}
-		
-	}	
-	
-	private function SwapIngredients () : Void 
-	{
-		_ingredientActive = _ingredientNext;
-		_ingredientActive.setPosition(GameProperties.IngredientPositionActive.x, GameProperties.IngredientPositionActive.y);
-		_ingredientActive._isNextIngredient = false;
-		_ingredientActive._doDraw = false;
 	}
 	
 	

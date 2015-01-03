@@ -19,7 +19,7 @@ class Patient extends FlxObject
 	public var _col : Color;
 	
 	private var _sprite : FlxSprite;
-	private var _hitbox : FlxSprite;
+	public var _hitBox : FlxSprite;
 	
 	private var _state : PlayState;
 	
@@ -47,8 +47,8 @@ class Patient extends FlxObject
 		_sprite.makeGraphic(32, 32);
 		_sprite.scale.set(4, 4);
 		
-		_hitbox = new FlxSprite();
-		_hitbox.makeGraphic(128, 128, FlxColorUtil.makeFromARGB(0.0, 1, 1, 1));
+		_hitBox = new FlxSprite();
+		_hitBox.makeGraphic(128, 128, FlxColorUtil.makeFromARGB(0.0, 1, 1, 1));
 		
 		if (!ChairTaken1)
 		{
@@ -102,8 +102,8 @@ class Patient extends FlxObject
 	public override function update () : Void
 	{
 		super.update();
-		_hitbox.x = _sprite.x = x;
-		_hitbox.y = _sprite.y = y;
+		_hitBox.x = _sprite.x = x;
+		_hitBox.y = _sprite.y = y;
 		
 		if (_status == PatientStatus.ComingIn)
 		{
@@ -114,7 +114,7 @@ class Patient extends FlxObject
 	public override function draw () : Void
 	{
 		super.draw();
-		_hitbox.draw();
+		_hitBox.draw();
 		_sprite.draw();
 		
 	}
