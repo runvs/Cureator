@@ -11,25 +11,18 @@ enum Color
 	Green;
 	Blue;
 	
-	RedGreen;	// brown
-	RedRedGreen; // orange
-	RedGreenGreen; // yellow
+	Yellow;		// Red + Green
+	Orange;		// Red + Red + Green
+	YellowGreen;// Red + Green + Green
 	
-	RedBlue;	// pink
-	RedRedBlue;	// magenta
-	RedBlueBlue;// purple
+	Pink;		// Red + Blue
+	Magenta;	// Red + Red + Blue
+	Purple;		// Red + Blue + Blue
+
+	Cyan;		// Green + Blue
+	SeaGreen;	// Green + Green + Blue
+	Skyblue;	// Green + Blue + Blue
 	
-	GreenBlue;	//cyan
-	GreenGreenBlue; //seagreen
-	GreenBlueBlue;	// skyblue
-	
-	White;	
-	
-	
-	
-	
-	Brown;
-	Purple;
-	Cyan;
+	White;		// Red + Green + Blue
 }
 

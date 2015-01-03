@@ -15,7 +15,7 @@ import flixel.util.FlxPoint;
 class Potion extends FlxObject
 {
 	public var _col : Color;
-	private var _fill : FillState;
+	public var _fill : FillState;
 	
 	private var _sprite : FlxSprite;
 	
@@ -37,7 +37,7 @@ class Potion extends FlxObject
 		
 		_fill = FillState.Empty;
 		
-		_sprite = GetSpriteFromColor();
+		GetSpriteFromColor();
 		_hitBox = new FlxSprite(0, 0);
 		_hitBox.makeGraphic(64, 64, FlxColorUtil.makeFromARGB(0.0,1,1,1));
 		
@@ -79,6 +79,7 @@ class Potion extends FlxObject
 	{
 		//trace ("old color: " + _col);
 		//trace ("add color: " + i._col);
+		_col = ColorManagement.CombineColors(this, i._col);
 		if (_fill == FillState.Three)
 		{
 			Break();
@@ -91,12 +92,11 @@ class Potion extends FlxObject
 		else if (_fill == FillState.One)
 		{
 			_fill = FillState.Two;
-			_col = ColorManagement.CombineColors(_col, i._col);
+			
 		}
 		else if (_fill == FillState.Two)
 		{
 			_fill = FillState.Three;
-			_col = ColorManagement.CombineColors(_col, i._col);
 		}
 		
 		updateColor();
@@ -112,68 +112,107 @@ class Potion extends FlxObject
 	
 	public function updateColor():Void
 	{
-		_sprite = GetSpriteFromColor();
+		GetSpriteFromColor();
 		_sprite.updateHitbox();
 	}
 	
 	
-	public function GetSpriteFromColor (): FlxSprite
+	public function GetSpriteFromColor (): Void
 	{
-		var spr : FlxSprite = new FlxSprite();
-		
-		
-		
+		if (_sprite == null)
+		{
+			_sprite = new FlxSprite();
+		}
 		if (_col == Color.Red)
 		{
-			spr.loadGraphic(AssetPaths.potion_red__png, true, 16, 16);
+			_sprite.loadGraphic(AssetPaths.potion_red__png, true, 16, 16);
 			_complete = true;
 		}
 		else if (_col == Color.Green)
 		{
-			spr.loadGraphic(AssetPaths.potion_green__png, true, 16, 16);
+			_sprite.loadGraphic(AssetPaths.potion_green__png, true, 16, 16);
 			_complete = true;
 		}
 		else if (_col == Color.Blue)
 		{
-			spr.loadGraphic(AssetPaths.potion_blue__png, true, 16, 16);
+			_sprite.loadGraphic(AssetPaths.potion_blue__png, true, 16, 16);
 			_complete = true;
+		}
+		else if (_col == Color.Yellow)
+		{
+			_sprite.loadGraphic(AssetPaths.potion_yellow__png, true, 16, 16);
+		}
+		else if (_col == Color.Orange)
+		{
+			_sprite.loadGraphic(AssetPaths.potion_orange__png, true, 16, 16);
+		}
+		else if (_col == Color.YellowGreen)
+		{
+			_sprite.loadGraphic(AssetPaths.potion_yellowgreen__png, true, 16, 16);
+		}
+		else if (_col == Color.Pink)
+		{
+			_sprite.loadGraphic(AssetPaths.potion_pink__png, true, 16, 16);
+		}
+		else if (_col == Color.Magenta)
+		{
+			_sprite.loadGraphic(AssetPaths.potion_magenta__png, true, 16, 16);
+		}
+		else if (_col == Color.Purple)
+		{
+			_sprite.loadGraphic(AssetPaths.potion_purple__png, true, 16, 16);
+		}
+		
+		else if (_col == Color.Cyan)
+		{
+			_sprite.loadGraphic(AssetPaths.potion_cyan__png, true, 16, 16);
+		}
+		else if (_col == Color.SeaGreen)
+		{
+			_sprite.loadGraphic(AssetPaths.potion_seagreen__png, true, 16, 16);
+		}
+		else if (_col == Color.Skyblue)
+		{
+			_sprite.loadGraphic(AssetPaths.potion_skyblue__png, true, 16, 16);
+		}
+		else if (_col == Color.White)
+		{
+			_sprite.loadGraphic(AssetPaths.potion_white__png, true, 16, 16);
 		}
 		else if (_col == Color.None)
 		{
-			spr.loadGraphic(AssetPaths.potion_empty____png, true, 16, 16);
+			_sprite.loadGraphic(AssetPaths.potion_empty__png, true, 16, 16);
 		}
 		else 
 		{
-			spr.makeGraphic(16, 16, ColorManagement.GetIntFromEnum(_col));
+			//_sprite.makeGraphic(16, 16, ColorManagement.GetIntFromEnum(_col));
 			_complete = false;
 		}
 		
 		if ( _complete && _col != Color.None)
 		{
-			spr.animation.add ("One", [0], 30, true);
-			spr.animation.add ("Two", [1], 30, true);
-			spr.animation.add ("Three", [2], 30, true);
+			_sprite.animation.add ("One", [0], 30, true);
+			_sprite.animation.add ("Two", [1], 30, true);
+			_sprite.animation.add ("Three", [2], 30, true);
 		}
 		
 		if (_complete)
 		{
 			if (_fill == FillState.One)
 			{
-				spr.animation.play("One");
+				_sprite.animation.play("One");
 			}
 			else if (_fill == FillState.Two)
 			{
-				spr.animation.play("Two");
+				_sprite.animation.play("Two");
 			}
 			else if (_fill == FillState.Three)
 			{
-				spr.animation.play("Three");
+				_sprite.animation.play("Three");
 			}
 		}
-		spr.scale.set(4, 4);
-		spr.updateHitbox();
-		
-		return spr;
+		_sprite.scale.set(4, 4);
+		_sprite.updateHitbox();
 	}
 	
 }

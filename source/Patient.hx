@@ -104,7 +104,7 @@ class Patient extends FlxObject
 	
 	private function PickRandomColor(dl:DifficultyLevel) : Void
 	{
-
+		_col = Color.Red;
 	}
 	
 	

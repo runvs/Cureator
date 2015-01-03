@@ -9,10 +9,12 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.ui.FlxButton;
+import flixel.util.FlxColorUtil;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxTimer;
+import haxe.ds.ObjectMap;
 
 
 /**
@@ -44,6 +46,7 @@ class PlayState extends FlxState
 	 */
 	override public function create():Void
 	{
+		
 		super.create();
 		_listPotions = new FlxTypedGroup<Potion>();
 		
@@ -155,6 +158,9 @@ class PlayState extends FlxState
 		
 
 		
+		
+		
+		
 	}	
 	
 	private function SwapIngredients () : Void 
@@ -249,8 +255,8 @@ class PlayState extends FlxState
 			{
 				var p : Patient = _listPatients.members[i];
 				
-				trace(_activePotion._hitBox);
-				trace(p._hitBox);
+				//trace(_activePotion._hitBox);
+				//trace(p._hitBox);
 				if (FlxG.overlap(p._hitBox, _activePotion._hitBox))
 				{	
 					dropped = true;
