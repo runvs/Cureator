@@ -22,12 +22,15 @@ class Ingredient  extends FlxObject
 	
 	public var _isNextIngredient : Bool;
 	
+	public var _doDraw : Bool;
+	
 	
 	public function new(X:Float=0, Y:Float=0, c:Color, state:PlayState ) 
 	{
 		super(X, Y);
 		_col = c;
 		
+		_doDraw = true;
 		
 		_state = state;
 		
@@ -115,7 +118,10 @@ class Ingredient  extends FlxObject
 	{
 		super.draw();
 		_hitBox.draw();
-		_sprite.draw();
+		if (_doDraw)
+		{
+			_sprite.draw();
+		}
 	}
 	
 	

@@ -13,7 +13,7 @@ class GameProperties
 	public static var PotionPosition3 : FlxPoint = new FlxPoint(396, 324);
 	public static var PotionPosition4 : FlxPoint = new FlxPoint(484, 324);
 
-	public static var IngredientPositionNext : FlxPoint = new FlxPoint(100, 50);
-	public static var IngredientPositionActive : FlxPoint = new FlxPoint(100, 100);
+	public static var IngredientPositionNext : FlxPoint = new FlxPoint(0, 448);
+	public static var IngredientPositionActive : FlxPoint = new FlxPoint(96, 224);
 	
 }

@@ -37,7 +37,7 @@ class Potion extends FlxObject
 		
 		_fill = FillState.Empty;
 		
-		_sprite = GetSpriteFromColor(_col);
+		_sprite = GetSpriteFromColor();
 		_hitBox = new FlxSprite(0, 0);
 		_hitBox.makeGraphic(64, 64, FlxColorUtil.makeFromARGB(0.0,1,1,1));
 		
@@ -45,41 +45,15 @@ class Potion extends FlxObject
 		
 		_complete = false;
 		
-		MouseEventManager.add(this._hitBox, null, null , onOver, onOut);
 		
 	}
 	
-	
-	public function onDown(spr:FlxSprite):Void 
-	{
-		var p :FlxPoint = new FlxPoint(x - FlxG.mouse.x, y - FlxG.mouse.y);
-		_state.setActivePotion(this, p);
-		
-	}
-	
-	public function onUp(spr:FlxSprite):Void 
-	{
-		
-	}
-	
-	public function onOver(spr:FlxSprite):Void 
-	{
-		_sprite = GetSpriteFromColor(Color.White);
-		spr.updateHitbox();
-	}
-	
-	public function onOut(spr:FlxSprite):Void 
-	{
-		updateColor();
-	}
-	
+
 	
 	public function getColor () : Color 
 	{
 		return _col;
 	}
-	
-	
 	
 	public override function update():Void
 	{
@@ -142,43 +116,43 @@ class Potion extends FlxObject
 	
 	public function updateColor():Void
 	{
-		_sprite = GetSpriteFromColor(_col);
+		_sprite = GetSpriteFromColor();
 		_sprite.updateHitbox();
 	}
 	
 	
-	public function GetSpriteFromColor (c:Color): FlxSprite
+	public function GetSpriteFromColor (): FlxSprite
 	{
 		var spr : FlxSprite = new FlxSprite();
 		
 		
 		
-		if (c == Color.Red)
+		if (_col == Color.Red)
 		{
 			spr.loadGraphic(AssetPaths.potion_red__png, true, 16, 16);
 			_complete = true;
 		}
-		else if (c == Color.Green)
+		else if (_col == Color.Green)
 		{
 			spr.loadGraphic(AssetPaths.potion_green__png, true, 16, 16);
 			_complete = true;
 		}
-		else if (c == Color.Blue)
+		else if (_col == Color.Blue)
 		{
 			spr.loadGraphic(AssetPaths.potion_blue__png, true, 16, 16);
 			_complete = true;
 		}
-		else if (c == Color.None)
+		else if (_col == Color.None)
 		{
 			spr.loadGraphic(AssetPaths.potion_empty____png, true, 16, 16);
 		}
 		else 
 		{
-			spr.makeGraphic(16, 16, ColorManagement.GetIntFromEnum(c));
+			spr.makeGraphic(16, 16, ColorManagement.GetIntFromEnum(_col));
 			_complete = false;
 		}
 		
-		if ( _complete && c != Color.None)
+		if ( _complete && _col != Color.None)
 		{
 			spr.animation.add ("One", [0], 30, true);
 			spr.animation.add ("Two", [1], 30, true);

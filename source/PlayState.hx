@@ -10,6 +10,8 @@ import flixel.tweens.FlxTween;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
+import flixel.util.FlxRandom;
+import flixel.util.FlxTimer;
 
 
 /**
@@ -31,6 +33,8 @@ class PlayState extends FlxState
 	
 	private var _activeIngredient : Ingredient;
 	private var _activeIngredientOffset : FlxPoint;
+	
+	private var _assistantLeft : Assistant;
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -60,6 +64,8 @@ class PlayState extends FlxState
 		_backgroundSprite.loadGraphic(AssetPaths.sampletambev2black__png, false, 192, 128);
 		_backgroundSprite.scale.set(4, 4);
 		_backgroundSprite.origin.set();
+		
+		_assistantLeft = new Assistant(true);
 		
 	}
 	
@@ -92,6 +98,8 @@ class PlayState extends FlxState
 		super.update();
 		
 		CleanUp();
+		
+		_assistantLeft.update();
 		
 		if (_activePotion != null)
 		{
@@ -151,7 +159,7 @@ class PlayState extends FlxState
 				if (dropped)
 				{
 					SwapIngredients();
-					_ingredientNext = SpawnNewIngredient();
+					SpawnNewIngredient();
 				}
 				else
 				{
@@ -184,14 +192,42 @@ class PlayState extends FlxState
 		_ingredientActive = _ingredientNext;
 		_ingredientActive.setPosition(GameProperties.IngredientPositionActive.x, GameProperties.IngredientPositionActive.y);
 		_ingredientActive._isNextIngredient = false;
+		_ingredientActive._doDraw = false;
 	}
 	
 	
-	public function SpawnNewIngredient():Ingredient
+	public function SpawnNewIngredient():Void
 	{
-		var i : Ingredient = new Ingredient(GameProperties.IngredientPositionNext.x, GameProperties.IngredientPositionNext.y, Color.Blue, this);
+		var c : Color;
+		
+		var r : Int = FlxRandom.intRanged(0, 2);
+		
+		if ( r == 0)
+		{
+			c = Color.Red;
+		}
+		else if (r == 1)
+		{
+			c = Color.Green;
+		}
+		else 
+		{
+			c = Color.Blue;
+		}
+		_assistantLeft.Pick(_ingredientNext._col);
+		var i : Ingredient = new Ingredient(GameProperties.IngredientPositionNext.x, GameProperties.IngredientPositionNext.y, c, this);
 		i._isNextIngredient = true;
-		return i;
+		_ingredientNext = i;
+		
+		
+		var t : FlxTimer  = new FlxTimer(Assistant.GetAnimTimeUntilPotionApears(), function (t:FlxTimer) 
+		{
+			_ingredientActive._doDraw = true;
+		} 
+		);
+		
+		
+		
 	}
 	
 	
@@ -199,6 +235,8 @@ class PlayState extends FlxState
 	{
 		_backgroundSprite.draw();
 		_listPotions.draw();
+		
+		_assistantLeft.draw();
 		
 		_ingredientActive.draw();
 		_ingredientNext.draw();
