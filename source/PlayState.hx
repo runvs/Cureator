@@ -37,7 +37,7 @@ class PlayState extends FlxState
 	private var _activeIngredient : Ingredient;
 	private var _activeIngredientOffset : FlxPoint;
 	
-	private var _assistantLeft : Assistant;
+	private var _assistantLeft : LeftAssistant;
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -75,7 +75,7 @@ class PlayState extends FlxState
 		
 		_switchBackground = true;
 		
-		_assistantLeft = new Assistant(true);
+		_assistantLeft = new LeftAssistant();
 		
 	}
 	
@@ -237,7 +237,7 @@ class PlayState extends FlxState
 		_ingredientNext = i;
 		
 		
-		var t : FlxTimer  = new FlxTimer(Assistant.GetAnimTimeUntilPotionApears(), function (t:FlxTimer) 
+		var t : FlxTimer  = new FlxTimer(LeftAssistant.GetAnimTimeUntilPotionApears(), function (t:FlxTimer) 
 		{
 			_ingredientActive._doDraw = true;
 		} 
