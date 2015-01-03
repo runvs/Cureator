@@ -14,7 +14,7 @@ import flixel.util.FlxPoint;
  */
 class Potion extends FlxObject
 {
-	private var _col : Color;
+	public var _col : Color;
 	private var _fill : FillState;
 	
 	private var _sprite : FlxSprite;

@@ -151,6 +151,8 @@ class PlayState extends FlxState
 			_pourIngredient.update();
 		}
 		
+		trace (_listPotions.length);
+		
 
 		
 	}	
@@ -246,15 +248,25 @@ class PlayState extends FlxState
 			for ( i in 0 ... _listPatients.length)
 			{
 				var p : Patient = _listPatients.members[i];
-				if (FlxG.overlap(_activePotion._hitBox, p._hitBox))
+				
+				trace(_activePotion._hitBox);
+				trace(p._hitBox);
+				if (FlxG.overlap(p._hitBox, _activePotion._hitBox))
 				{	
+					dropped = true;
+					p.Cure(_activePotion);
+					_activePotion.setPosition( -500, -500);
+					_activePotion._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
+					_activePotion.Break();
 					
+					_activePotion = null;
 					break;
 				}
 			}
 			
 			if ( dropped)
 			{
+				
 				
 			}
 			else
@@ -313,8 +325,10 @@ class PlayState extends FlxState
 	
 	public function SpawnNewJar (p:FlxPoint) : Void 
 	{
+		
 		var t : FlxTimer = new FlxTimer(GameProperties.JarSpawnTime, function (t:FlxTimer) : Void 
 		{
+			trace ("spawn new jar");
 			_listPotions.add(new Potion(p.x, p.y, Color.None, this));
 		} 
 		);

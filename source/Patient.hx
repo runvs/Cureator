@@ -31,6 +31,11 @@ class Patient extends FlxObject
 	public static var ChairTaken2 : Bool = false;
 	public static var ChairTaken3 : Bool = false;
 	
+	private var chair :Int;
+	
+	private var _success : Bool;
+	
+	
 	public function new(state:PlayState) 
 	{
 		super();
@@ -39,12 +44,14 @@ class Patient extends FlxObject
 		
 		_status = PatientStatus.ComingIn;
 		
+		_success = false;
+		
 		PickRandomColor();
 		x = GameProperties.PatientSpawnPosition.x;
 		y = GameProperties.PatientSpawnPosition.y;
 		
 		_sprite = new FlxSprite ();
-		_sprite.makeGraphic(32, 32);
+		_sprite.makeGraphic(32, 32, ColorManagement.GetIntFromEnum(_col));
 		_sprite.scale.set(4, 4);
 		
 		_hitBox = new FlxSprite();
@@ -54,16 +61,19 @@ class Patient extends FlxObject
 		{
 			_targetPosition = GameProperties.PatientSeat1;
 			ChairTaken1 = true;
+			chair = 1;
 		}
 		else if (!ChairTaken2)
 		{
 			_targetPosition = GameProperties.PatientSeat2;
 			ChairTaken2 = true;
+			chair = 2;
 		}
 		else if (!ChairTaken3)
 		{
 			_targetPosition = GameProperties.PatientSeat3;
 			ChairTaken3 = true;
+			chair = 3;
 		}
 		else 
 		{
@@ -90,12 +100,57 @@ class Patient extends FlxObject
 	{
 		alive = false;
 		exists = false;
-		//_state.SpawnNewJar(_originalPosition);
 	}
 	
 	private function PickRandomColor() : Void
 	{
 		_col = Color.Red;
+	}
+	
+	
+	public function Cure (p:Potion) : Void
+	{
+		_status = PatientStatus.GoingOut;
+
+		
+		// free the chair
+		if (chair == 1)
+		{
+			ChairTaken1 = false;
+		}
+		else if (chair == 2)
+		{
+			ChairTaken2 = false;
+		}
+		else if (chair == 3)
+		{
+			ChairTaken3 = false;
+		}
+		
+		
+		// check if correct potion
+		if ( p._col == _col)
+		{
+			_success = true;
+		}
+		
+		// make him move
+		_targetPosition = GameProperties.PatientExitPosition;
+		
+		var distance : FlxVector = new FlxVector();
+		distance.set(_targetPosition.x - x, _targetPosition.y - y );
+		var length : Float = distance.length;
+		
+		var time : Float = length / GameProperties.PatientSpeed;
+		
+		
+		FlxTween.tween( this, { x:_targetPosition.x, y:_targetPosition.y }, time, {complete:function (t:FlxTween) : Void
+		{
+			Break();
+		}}
+		);
+		
+		
 	}
 	
 	
