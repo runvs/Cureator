@@ -117,6 +117,7 @@ class PlayState extends FlxState
 			{
 				var p :FlxPoint = new FlxPoint(_ingredientActive.x - FlxG.mouse.x, _ingredientActive.y - FlxG.mouse.y);
 				setActiveIngredient(_ingredientActive, p);
+				_assistantLeft.Take();
 			}
 			
 			// check any of the Potions
@@ -136,6 +137,7 @@ class PlayState extends FlxState
 			//trace ("mouse released");
 			if (_activeIngredient != null && _activeIngredient.active == true)
 			{
+				_assistantLeft.Release();
 				//trace ("active ingredient");
 				var dropped :Bool = false;
 				for ( i in 0 ... _listPotions.length)

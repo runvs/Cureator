@@ -1,8 +1,9 @@
 package ;
 
+import flixel.FlxBasic;
+import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import neko.vm.Module.ModuleHandle;
 
 /**
  * ...
@@ -19,6 +20,8 @@ class Assistant extends FlxObject
 	
 	private var _col:Color;
 	
+	private var _isInTake :Bool;
+	
 	public static function GetAnimTimeUntilPotionApears () : Float { return 0.571; }
 	
 	
@@ -28,6 +31,8 @@ class Assistant extends FlxObject
 		_isLeft = isLeft;
 		
 		_col = Color.None;
+		
+		_isInTake = false;
 		
 		if (_isLeft)
 		{
@@ -66,12 +71,22 @@ class Assistant extends FlxObject
 			
 			_spriteRed.x = _spriteGreen.x = _spriteBlue.x  = 64;
 			_spriteRed.y = _spriteGreen.y = _spriteBlue.y  = 192;
+			
+			_spriteRed.setFacingFlip(FlxObject.LEFT, true, false);
+			_spriteRed.setFacingFlip(FlxObject.RIGHT, false, false);
+			
+			_spriteGreen.setFacingFlip(FlxObject.LEFT, true, false);
+			_spriteGreen.setFacingFlip(FlxObject.RIGHT, false, false);
+			
+			_spriteBlue.setFacingFlip(FlxObject.LEFT, true, false);
+			_spriteBlue.setFacingFlip(FlxObject.RIGHT, false, false);
 		}
 	}
 	
 	// when ingr. is taken from the assistant
 	public function Take () : Void
 	{
+		_isInTake = true;
 		_spriteRed.animation.play("take");
 		_spriteGreen.animation.play("take");
 		_spriteBlue.animation.play("take");
@@ -83,10 +98,12 @@ class Assistant extends FlxObject
 		_spriteRed.animation.play("hold");
 		_spriteGreen.animation.play("hold");
 		_spriteBlue.animation.play("hold");
+		_isInTake = false;
 	}
 	
 	public function Pick(c:Color):Void
 	{
+		_isInTake = false;
 		if (c == Color.Red)
 		{
 			PickRed();
@@ -127,21 +144,45 @@ class Assistant extends FlxObject
 			_spriteRed.update();
 			_spriteGreen.update();
 			_spriteBlue.update();
+			_spriteRed.facing = FlxObject.RIGHT;
+			_spriteGreen.facing = FlxObject.RIGHT;
+			_spriteBlue.facing = FlxObject.RIGHT;
 			
-			if (_col == Color.Red && _spriteRed.animation.finished)
+			if (_isInTake)
 			{
-				_spriteRed.animation.play("hold");
+				var facingLeft : Bool = (FlxG.mouse.x < _spriteRed.x + 64);
+				if (facingLeft)
+				{
+					_spriteRed.facing = FlxObject.LEFT;
+					_spriteGreen.facing = FlxObject.LEFT;
+					_spriteBlue.facing = FlxObject.LEFT;
+				}
+				else
+				{
+					_spriteRed.facing = FlxObject.RIGHT;
+					_spriteGreen.facing = FlxObject.RIGHT;
+					_spriteBlue.facing = FlxObject.RIGHT;
+				}
 			}
-			else if (_col == Color.Green && _spriteGreen.animation.finished)
+			else
 			{
-				_spriteGreen.animation.play("hold");
-				_spriteRed.animation.play("idle");
+				if (_col == Color.Red && _spriteRed.animation.finished)
+				{
+					_spriteRed.animation.play("hold");
+				}
+				else if (_col == Color.Green && _spriteGreen.animation.finished)
+				{
+					_spriteGreen.animation.play("hold");
+					_spriteRed.animation.play("idle");
+				}
+				else if (_col == Color.Blue && _spriteBlue.animation.finished)
+				{
+					_spriteBlue.animation.play("hold");
+					_spriteRed.animation.play("idle");
+				}
 			}
-			else if (_col == Color.Blue && _spriteBlue.animation.finished)
-			{
-				_spriteBlue.animation.play("hold");
-				_spriteRed.animation.play("idle");
-			}
+			
+
 		}
 		else
 		{
