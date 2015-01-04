@@ -28,4 +28,6 @@ class GameProperties
 	public static var PatientSpeed : Float = 80;
 	public static var PatientSpawnTime : Float = 5;
 	
+	public static var ActionsForPatitentsToMove : Int = 2;
+	
 }

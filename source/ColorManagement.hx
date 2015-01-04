@@ -134,7 +134,7 @@ class ColorManagement
 	{
 		var c1 :Color = p1._col;
 		
-		trace ("mixing " + c1 + " " + c2 );
+		//trace ("mixing " + c1 + " " + c2 );
 		
 		// check the easy cases first
 		if (c1 == c2)
@@ -261,7 +261,7 @@ class ColorManagement
 			
 		}
 		
-		trace ("created " + c3);
+		//trace ("created " + c3);
 		
 		return c3;
 		//White;		// Red + Green + Blue

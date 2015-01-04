@@ -41,6 +41,10 @@ class PlayState extends FlxState
 	private var _activeIngredientOffset : FlxPoint;
 	
 	private var _assistantLeft : LeftAssistant;
+	
+	private var _actionCounter : Int;
+	
+	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -85,7 +89,7 @@ class PlayState extends FlxState
 		
 		_assistantLeft = new LeftAssistant();
 		
-
+		_actionCounter = 0;
 	}
 	
 	/**
@@ -122,6 +126,7 @@ class PlayState extends FlxState
 	{
 		super.update();
 		
+		trace (_listPatients.length);
 		
 		//// Input
 		if (FlxG.keys.anyJustPressed(["F10"]))
@@ -238,6 +243,7 @@ class PlayState extends FlxState
 			{
 				SwapIngredients();
 				SpawnNewIngredient();
+				MakePatientsMove();
 			}
 			else
 			{
@@ -257,27 +263,28 @@ class PlayState extends FlxState
 				for ( i in 0 ... _listPatients.length)
 				{
 					var p : Patient = _listPatients.members[i];
-					
-					//trace(_activePotion._hitBox);
-					//trace(p._hitBox);
-					if (FlxG.overlap(p._hitBox, _activePotion._hitBox))
-					{	
-						dropped = true;
-						p.Cure(_activePotion);
-						_activePotion.setPosition( -500, -500);
-						_activePotion._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
-						_activePotion.Break();
-						
-						_activePotion = null;
-						break;
+					if (p._status == PatientStatus.Waiting)
+					{
+						//trace(_activePotion._hitBox);
+						//trace(p._hitBox);
+						if (FlxG.overlap(p._hitBox, _activePotion._hitBox))
+						{	
+							dropped = true;
+							p.Cure(_activePotion);
+							_activePotion.setPosition( -500, -500);
+							_activePotion._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
+							_activePotion.Break();
+							
+							_activePotion = null;
+							break;
+						}
 					}
 				}
 			}
 			
 			if ( dropped)
 			{
-				
-				
+				MakePatientsMove();
 			}
 			else
 			{
@@ -298,6 +305,21 @@ class PlayState extends FlxState
 			
 			_activePotion = null;
 			_activeIngredient = null;
+		}
+	}
+	
+	public function MakePatientsMove() : Void
+	{
+		_actionCounter++;
+		if (_actionCounter == GameProperties.ActionsForPatitentsToMove)
+		{
+			for ( i in 0 ... _listPatients.length)
+			{
+				var p : Patient = _listPatients.members[i];
+				p.MoveForward();
+			}
+			SpawnNewPatient();
+			_actionCounter = 0;
 		}
 	}
 	
@@ -348,7 +370,7 @@ class PlayState extends FlxState
 	{
 		var p : Patient  = new Patient(this);
 		_listPatients.add(p);
-		var t : FlxTimer  = new FlxTimer(GameProperties.PatientSpawnTime, function (x:FlxTimer) : Void { SpawnNewPatient(); } );
+		//var t : FlxTimer  = new FlxTimer(GameProperties.PatientSpawnTime, function (x:FlxTimer) : Void { SpawnNewPatient(); } );
 	}
 	
 	

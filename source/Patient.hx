@@ -24,13 +24,9 @@ class Patient extends FlxObject
 	
 	private var _state : PlayState;
 	
-	private var _status : PatientStatus;
+	public var _status : PatientStatus;
 	
 	private var _targetPosition : FlxPoint;
-	
-	public static var ChairTaken1 : Bool = false;
-	public static var ChairTaken2 : Bool = false;
-	public static var ChairTaken3 : Bool = false;
 	
 	private var chair :Int;
 	
@@ -56,29 +52,9 @@ class Patient extends FlxObject
 		_hitBox = new FlxSprite();
 		_hitBox.makeGraphic(128, 128, FlxColorUtil.makeFromARGB(0.0, 1, 1, 1));
 		
-		if (!ChairTaken1)
-		{
-			_targetPosition = GameProperties.PatientSeat1;
-			ChairTaken1 = true;
-			chair = 1;
-		}
-		else if (!ChairTaken2)
-		{
-			_targetPosition = GameProperties.PatientSeat2;
-			ChairTaken2 = true;
-			chair = 2;
-		}
-		else if (!ChairTaken3)
-		{
-			_targetPosition = GameProperties.PatientSeat3;
-			ChairTaken3 = true;
-			chair = 3;
-		}
-		else 
-		{
-			Break();
-			return;
-		}
+		_targetPosition = GameProperties.PatientSeat1;
+		chair = 1;
+		
 		var distance : FlxVector = new FlxVector();
 		distance.set(_targetPosition.x - x, _targetPosition.y - y );
 		var length : Float = distance.length;
@@ -94,6 +70,64 @@ class Patient extends FlxObject
 		
 	}
 	
+	
+	public function MoveForward():Void
+	{
+		if (_status != PatientStatus.GoingOut)
+		{
+			if (chair == 1)
+			{
+				chair = 2;
+				_targetPosition = GameProperties.PatientSeat2;
+			}
+			else if (chair == 2)
+			{
+				chair = 3;
+				_targetPosition = GameProperties.PatientSeat3;
+			}
+			else if (chair == 3 || chair == 4)
+			{
+				chair = 4;
+				_targetPosition = GameProperties.PatientExitPosition;
+				_status = PatientStatus.GoingOut;
+			}
+			
+			// make him move	
+			var distance : FlxVector = new FlxVector();
+			distance.set(_targetPosition.x - x, _targetPosition.y - y );
+			var length : Float = distance.length;
+			
+			var time : Float = length / GameProperties.PatientSpeed;
+			
+			
+			FlxTween.tween( this, { x:_targetPosition.x, y:_targetPosition.y }, time, {complete:function (t:FlxTween) : Void
+			{
+				if (_status == PatientStatus.GoingOut)
+				{
+					MoveToExit();
+				}
+			}}
+			);
+		}
+	}
+	
+	public function MoveToExit () : Void
+	{
+		_targetPosition = GameProperties.PatientExitPosition;
+		
+		var distance : FlxVector = new FlxVector();
+		distance.set(_targetPosition.x - x, _targetPosition.y - y );
+		var length : Float = distance.length;
+			
+		var time : Float = length / GameProperties.PatientSpeed;
+		
+		
+		FlxTween.tween( this, { x:_targetPosition.x, y:_targetPosition.y }, time, {complete:function (t:FlxTween) : Void
+		{
+			Break();
+		}}
+		);
+	}
 	
 	public function Break():Void
 	{
@@ -152,38 +186,19 @@ class Patient extends FlxObject
 	public function Cure (p:Potion) : Void
 	{
 		_status = PatientStatus.GoingOut;
-
-		
-		// free the chair
-		if (chair == 1)
-		{
-			ChairTaken1 = false;
-		}
-		else if (chair == 2)
-		{
-			ChairTaken2 = false;
-		}
-		else if (chair == 3)
-		{
-			ChairTaken3 = false;
-		}
-		
 		
 		// check if correct potion
 		if ( p._col == _col)
 		{
 			_success = true;
-			
 			_targetPosition = GameProperties.PatientExitPosition;
 		}
 		else 
 		{
 			_success = false;
-			_targetPosition = GameProperties.PatientSpawnPosition;
 		}
 		
-		// make him move
-		
+		// make him move	
 		var distance : FlxVector = new FlxVector();
 		distance.set(_targetPosition.x - x, _targetPosition.y - y );
 		var length : Float = distance.length;
