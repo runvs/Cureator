@@ -252,22 +252,25 @@ class PlayState extends FlxState
 		if (_activePotion != null)
 		{
 			var dropped :Bool = false;
-			for ( i in 0 ... _listPatients.length)
+			if ( _activePotion._fill !=  FillState.Empty)
 			{
-				var p : Patient = _listPatients.members[i];
-				
-				//trace(_activePotion._hitBox);
-				//trace(p._hitBox);
-				if (FlxG.overlap(p._hitBox, _activePotion._hitBox))
-				{	
-					dropped = true;
-					p.Cure(_activePotion);
-					_activePotion.setPosition( -500, -500);
-					_activePotion._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
-					_activePotion.Break();
+				for ( i in 0 ... _listPatients.length)
+				{
+					var p : Patient = _listPatients.members[i];
 					
-					_activePotion = null;
-					break;
+					//trace(_activePotion._hitBox);
+					//trace(p._hitBox);
+					if (FlxG.overlap(p._hitBox, _activePotion._hitBox))
+					{	
+						dropped = true;
+						p.Cure(_activePotion);
+						_activePotion.setPosition( -500, -500);
+						_activePotion._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
+						_activePotion.Break();
+						
+						_activePotion = null;
+						break;
+					}
 				}
 			}
 			
@@ -359,9 +362,11 @@ class PlayState extends FlxState
 		{
 			_backgroundSprite1.draw();
 		}
-		_listPotions.draw();
+		
 		
 		_listPatients.draw();
+		
+		_listPotions.draw();
 		
 		_assistantLeft.draw();
 		
