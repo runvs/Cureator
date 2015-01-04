@@ -134,6 +134,7 @@ class ColorManagement
 	{
 		var c1 :Color = p1._col;
 		
+		trace ("mixing " + c1 + " " + c2 );
 		
 		// check the easy cases first
 		if (c1 == c2)
@@ -160,17 +161,18 @@ class ColorManagement
 		var c3 :Color = Color.None;
 		
 		
-		if (ConvertToOrderParameter(c2) < ConvertToOrderParameter(c1))
-		{
-			var p : Potion  = new Potion( -100, -100, c2, null);
-			p._fill = FillState.One;
-			return CombineColors(p , c1);	// half the cases killed :D
-		}
+		
 		
 		
 		// now begins the coding fun!
 		if (p1._fill == FillState.One)
 		{
+			if (ConvertToOrderParameter(c2) < ConvertToOrderParameter(c1))
+			{
+				var p : Potion  = new Potion( -100, -100, c2, null);
+				p._fill = FillState.One;
+				return CombineColors(p , c1);	// half the cases killed :D
+			}
 			if (c1 == Color.Red && c2 == Color.Green)
 			{
 				c3 = Color.Yellow;
@@ -218,7 +220,7 @@ class ColorManagement
 			{
 				c3 = Color.Purple;
 			}
-			if (c1 == Color.Pink && c2 == Color.Blue) // pink (red + blue), blue
+			if (c1 == Color.Magenta && c2 == Color.Blue) // Magenta (red + blue), blue
 			{
 				c3 = Color.Purple;
 			}
@@ -241,20 +243,26 @@ class ColorManagement
 				c3 = Color.Skyblue;
 			}
 			
-			if (c1 == Color.Yellow && c2 == Color.Blue)
+			if (c1 == Color.Yellow && c2 == Color.Blue || c2 == Color.Yellow && c1 == Color.Blue)
 			{
+				//trace ("crafted white");
 				c3 = Color.White;
 			}
-			if (c1 == Color.Magenta && c2 == Color.Green)
+			if (c1 == Color.Magenta && c2 == Color.Green || c2 == Color.Magenta && c1 == Color.Green)
 			{
+				//trace ("crafted white");
 				c3 = Color.White;
 			}
-			if (c1 == Color.Cyan && c2 == Color.Red)
+			if (c1 == Color.Cyan && c2 == Color.Red || c2 == Color.Cyan && c1 == Color.Red)
 			{
+				//trace ("crafted white");
 				c3 = Color.White;
 			}
 			
 		}
+		
+		trace ("created " + c3);
+		
 		return c3;
 		//White;		// Red + Green + Blue
 		

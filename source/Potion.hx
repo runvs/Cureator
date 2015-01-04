@@ -177,6 +177,7 @@ class Potion extends FlxObject
 		}
 		else if (_col == Color.White)
 		{
+			trace ("loading white potion");
 			_sprite.loadGraphic(AssetPaths.potion_white__png, true, 16, 16);
 		}
 		else if (_col == Color.None)
