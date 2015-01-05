@@ -1,8 +1,10 @@
 package ;
 
 import flixel.animation.FlxPrerotatedAnimation;
+import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.system.FlxSound;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColorUtil;
 import flixel.util.FlxPoint;
@@ -33,6 +35,8 @@ class Patient extends FlxObject
 	private var _success : Bool;
 	
 	public var _neededFillState  : FillState;
+	
+	private var _cureSound : FlxSound;
 	
 	
 	public function new(state:PlayState) 
@@ -71,6 +75,18 @@ class Patient extends FlxObject
 			_status = PatientStatus.Waiting;
 		}}
 		);
+		
+		
+		
+		_cureSound = new FlxSound();
+        #if flash
+        _cureSound = FlxG.sound.load(AssetPaths.cure__mp3, 0.25, false,false , false );
+        //soundBassDrop = FlxG.sound.load(AssetPaths.bassdrop__mp3, 0.85, false, false , false);
+        #else
+        _cureSound = FlxG.sound.load(AssetPaths.cure__ogg, 0.25 , false , false , false);
+        //soundBassDrop = FlxG.sound.load(AssetPaths.bassdrop__ogg, 0.85, false, false , false);
+        #end
+		
 		
 	}
 	
@@ -297,6 +313,7 @@ class Patient extends FlxObject
 			_success = true;
 			_state.AddMoney(this);
 			_sprite.animation.play("cured");
+			_cureSound.play();
 		}
 		else 
 		{
