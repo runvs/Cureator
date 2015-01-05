@@ -53,6 +53,12 @@ class PlayState extends FlxState
 	 */
 	override public function create():Void
 	{
+		MoneyDisplay.drawSingleNumber(5, new FlxPoint());
+		trace("");
+		MoneyDisplay.drawSingleNumber(11, new FlxPoint());
+		trace("");
+		MoneyDisplay.drawSingleNumber(1234, new FlxPoint());
+		
 		
 		super.create();
 		_listPotions = new FlxTypedGroup<Potion>();
@@ -441,8 +447,11 @@ class PlayState extends FlxState
 		_ingredientActive.draw();
 		_ingredientNext.draw();
 		
-		var t : FlxText = new FlxText(286, 8, 156, Std.string(_money), 10, true);
-		t.draw();
+		//var t : FlxText = new FlxText(286, 8, 156, Std.string(_money), 10, true);
+		
+		//t.draw();
+		
+		MoneyDisplay.drawSingleNumber(_money, new FlxPoint(286, 8));
 		
 		_screenOverlay.draw();
 		

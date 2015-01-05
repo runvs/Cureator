@@ -81,22 +81,22 @@ class Patient extends FlxObject
 		{
 			if (_chair == 1)
 			{
-				trace ("Move To 2");
+				//trace ("Move To 2");
 				_chair = 2;
 				_targetPosition = GameProperties.PatientSeat2;
 			}
 			else if (_chair == 2)
 			{
-				trace ("Move To 3");
+				//trace ("Move To 3");
 				_chair = 3;
 				_targetPosition = GameProperties.PatientSeat3;
 			}
 			else if (_chair == 3 || _chair == 4)
 			{
-				trace ("Move To 4/Exit");
+				//trace ("Move To 4/Exit");
 				_chair = 4;
-				_targetPosition = GameProperties.PatientExitPosition;
-				_status = PatientStatus.GoingOut;
+				MoveToExit();
+				return;
 			}
 			
 			// make him move	
@@ -257,38 +257,43 @@ class Patient extends FlxObject
 		_sprite.scale.set(4, 4);
 	}
 	
-	
-	public function Cure (p:Potion) : Void
+	function CheckFillLevel(p:Potion) : Bool 
 	{
-		_status = PatientStatus.GoingOut;
-		var _fullFilled : Bool = false;
+		var ret : Bool = false;
 		if (_neededFillState == FillState.One)
 		{
 			if (p._fill != FillState.Empty)
 			{
-				_fullFilled = true;
+				ret = true;
 			}
 		}
 		else if (_neededFillState == FillState.Two)
 		{
 			if (p._fill == FillState.Two || p._fill == FillState.Three )
 			{
-				_fullFilled = true;
+				ret = true;
 			}
 		}
 		else if (_neededFillState == FillState.Three)
 		{
 			if (p._fill == FillState.Three)
 			{
-				_fullFilled = true;
+				ret = true;
 			}
 		}
+		return ret;
+	}
+	
+	
+	public function Cure (p:Potion) : Void
+	{
+		var fullFilled : Bool = CheckFillLevel(p);
+		
 		// check if correct potion
-		if ( p._col == _col && _fullFilled )
+		if ( p._col == _col && fullFilled )
 		{
 			trace ("cured");
 			_success = true;
-			_targetPosition = GameProperties.PatientExitPosition;
 			_state.AddMoney(this);
 		}
 		else 
@@ -298,8 +303,7 @@ class Patient extends FlxObject
 		}
 		
 		MoveToExit();
-		
-		
+
 	}
 	
 	
