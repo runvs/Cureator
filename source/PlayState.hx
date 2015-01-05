@@ -44,6 +44,8 @@ class PlayState extends FlxState
 	
 	private var _money : Int;
 	
+	private var _loosing : Bool;
+	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -91,7 +93,8 @@ class PlayState extends FlxState
 		
 		_actionCounter = 0;
 		
-		_money = 0;
+		_money = GameProperties.MoneyStartAmount;
+		_loosing = false;
 	}
 	
 	/**
@@ -155,22 +158,17 @@ class PlayState extends FlxState
 		
 
 		//// Update Block
-		_assistantLeft.update();
-		_assistantRight.update();
-		
-		_listPatients.update();
-		_listPotions.update();
-		
-		_ingredientActive.update();
-		_ingredientNext.update();
-		
-		
-		//trace (_listPotions.length);
-		
-
-		
-		
-		
+		if (!_loosing)
+		{
+			_assistantLeft.update();
+			_assistantRight.update();
+			
+			_listPatients.update();
+			_listPotions.update();
+			
+			_ingredientActive.update();
+			_ingredientNext.update();
+		}
 		
 	}	
 	
@@ -375,7 +373,11 @@ class PlayState extends FlxState
 		{
 			c = Color.Blue;
 		}
+		
 		_assistantLeft.Pick(_ingredientNext._col);
+		RemoveMoney(GameProperties.MoneyIngredientCost);
+		
+		
 		var i : Ingredient = new Ingredient(GameProperties.IngredientPositionNext.x, GameProperties.IngredientPositionNext.y, c, this);
 		i._isNextIngredient = true;
 		_ingredientNext = i;
@@ -482,6 +484,34 @@ class PlayState extends FlxState
 		
 		var i : Int = Std.int(amount);
 		_money += i;
+	}
+	
+	private function RemoveMoney (amount : Int ) : Void 
+	{
+		_money -= amount;
+		if (_money < 0)
+		{
+			LooseGame();
+		}
+		
+	}
+	
+	public function LooseGame ( ) : Void 
+	{
+		_loosing = true;
+		FlxG.camera.fade();
+		var t: FlxTimer = new FlxTimer(1.0, function (t:FlxTimer) : Void 
+		{
+			FlxG.switchState(new MenuState());
+		});
+		//FlxTween.tween ( FlxG.camera.color, { r:0, g:0, b:0 }, 1.0, 
+		//{
+			//complete : function (t:FlxTween):Void
+			//{
+				//FlxG.switchState(new MenuState());
+			//}
+		//} );
+		
 	}
 	
 	
