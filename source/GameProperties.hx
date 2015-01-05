@@ -30,6 +30,7 @@ class GameProperties
 	
 	public static var ActionsForPatitentsToMove : Int = 2;
 	
+	public static var MoneyBaseGainValue : Float = 4;
 	public static var MoneyIngredientCost : Int = 1;
 	public static var MoneyStartAmount : Int = 7;
 	

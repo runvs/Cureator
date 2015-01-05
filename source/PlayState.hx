@@ -466,21 +466,21 @@ class PlayState extends FlxState
 	
 	public function AddMoney (p:Patient)
 	{
-		var amount : Float = 5;
+		var amount : Float = GameProperties.MoneyBaseGainValue;
 		
 		var factor : Float = 1.0;
 		if (p._neededFillState == FillState.Two)
 		{
-			factor = 2.0;
+			factor = 1.25;
 		}
 		else if (p._neededFillState == FillState.Three)
 		{
-			factor = 3.0;
+			factor = 1.5;
 		}
 		amount *= factor;
 		
 		var chair : Float = p._chair;
-		amount /= Math.sqrt(chair);
+		amount /= 0.5 + (0.5*chair);
 		
 		var i : Int = Std.int(amount);
 		_money += i;
