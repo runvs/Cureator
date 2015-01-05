@@ -10,28 +10,20 @@ import flixel.util.FlxPoint;
  * ...
  * @author 
  */
-class MoneyDisplay extends FlxObject
+class MoneyDisplay
 {
 
 	private var _sprite :FlxSprite;
-	
-	private var _number : Int;
-	
-	private static var _xOffs : Int = 24;
-	
-	public function new(X:Float=0, Y:Float=0, Width:Float=0, Height:Float=0) 
-	{
-		super(X, Y, Width, Height);
 		
+	private var _xOffs : Int = 24;
+	private var _text : FlxText;
+	
+	public function new() 
+	{
+		_text = new FlxText();
+		_text.fieldWidth = _xOffs;
 	}
 	
-	public override function draw():Void
-	{
-		var Ones : Int = _number % 10;
-		
-		
-		
-	}
 	
 	public static function getDigitCount ( n : Int) : Int
 	{
@@ -46,13 +38,19 @@ class MoneyDisplay extends FlxObject
 		return digits;
 	}
 	
-	public static function drawSingleNumber ( n : Int, p:FlxPoint)	// recursive !
+	public function drawSingleNumber ( n : Int, p:FlxPoint)	// recursive !
 	{
 		if (n < 10)
 		{
 			//trace (n);
-			var t : FlxText = new FlxText(p.x, p.y, _xOffs, Std.string(n));
-			t.draw();
+			//_text.x = p.x;
+			//_text.y = p.y;
+			//_text.text = Std.string(n);
+			//_text.draw();
+			
+			//var t : FlxText = new FlxText(p.x, p.y, _xOffs, Std.string(n));
+			//t.draw();
+			//t.destroy();
 		}
 		else 
 		{
@@ -61,11 +59,6 @@ class MoneyDisplay extends FlxObject
 			drawSingleNumber(n % 10, p);
 		}
 		
-	}
-	
-	public function SetNumber ( n : Int) : Void
-	{
-		_number = n;
 	}
 	
 }

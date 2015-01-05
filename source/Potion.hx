@@ -56,15 +56,11 @@ class Potion extends FlxObject
 	
 	public override function update():Void
 	{
-		super.update();
+		//super.update();
 		_sprite.update();
-		_hitBox.update();
-		
-		_sprite.x = x;
-		_sprite.y = y;
-		
-		_hitBox.x = x;
-		_hitBox.y = y;
+		//_hitBox.update();
+		_sprite.x = _hitBox.x = x;
+		_sprite.y = _hitBox.y =  y;
 	}
 	
 	

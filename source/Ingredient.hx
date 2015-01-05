@@ -59,25 +59,16 @@ class Ingredient  extends FlxObject
 	
 	public override function update () :Void 
 	{
-		super.update();
+		//super.update();
 		_sprite.update();
 		_hitBox.update();
 		if ( active)
 		{
-
-			
-			_sprite.x = x;
-			_sprite.y = y;
-			
-			_hitBox.x = x;
-			_hitBox.y = y;
+			_sprite.x = _hitBox.x =  x;
+			_sprite.y = _hitBox.y = y;
 		}
 		else
 		{
-			if (_sprite.animation.finished)
-			{
-				_state.ResetActiveIngredient();
-			}
 		}
 		
 	}

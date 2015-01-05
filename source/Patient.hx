@@ -120,7 +120,7 @@ class Patient extends FlxObject
 	
 	public function MoveToExit () : Void
 	{
-		trace ("Move To Exit");
+		//trace ("Move To Exit");
 		_status = PatientStatus.GoingOut;
 		_targetPosition = GameProperties.PatientExitPosition;
 		
@@ -292,13 +292,13 @@ class Patient extends FlxObject
 		// check if correct potion
 		if ( p._col == _col && fullFilled )
 		{
-			trace ("cured");
+			//trace ("cured");
 			_success = true;
 			_state.AddMoney(this);
 		}
 		else 
 		{
-			trace ("not cured");
+			//trace ("not cured");
 			_success = false;
 		}
 		
@@ -312,11 +312,7 @@ class Patient extends FlxObject
 		super.update();
 		_hitBox.x = _sprite.x = x;
 		_hitBox.y = _sprite.y = y;
-		
-		if (_status == PatientStatus.ComingIn)
-		{
-			
-		}
+
 	}
 	
 	public override function draw () : Void

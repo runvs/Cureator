@@ -14,6 +14,7 @@ import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxTimer;
+import haxe.Timer;
 
 
 /**
@@ -43,22 +44,26 @@ class PlayState extends FlxState
 	private var _actionCounter : Int;
 	
 	private var _money : Int;
+	private var _moneyText : MoneyDisplay;
 	
 	private var _loosing : Bool;
 	
 	private var _screenOverlay : FlxSprite;
+	
+	
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
 	override public function create():Void
 	{
-		MoneyDisplay.drawSingleNumber(5, new FlxPoint());
-		trace("");
-		MoneyDisplay.drawSingleNumber(11, new FlxPoint());
-		trace("");
-		MoneyDisplay.drawSingleNumber(1234, new FlxPoint());
+		//MoneyDisplay.drawSingleNumber(5, new FlxPoint());
+		//trace("");
+		//MoneyDisplay.drawSingleNumber(11, new FlxPoint());
+		//trace("");
+		//MoneyDisplay.drawSingleNumber(1234, new FlxPoint());
 		
+		_moneyText = new MoneyDisplay();
 		
 		super.create();
 		_listPotions = new FlxTypedGroup<Potion>();
@@ -144,22 +149,8 @@ class PlayState extends FlxState
 	{
 		super.update();
 		
-		//trace (_listPatients.length);
-		
-		//// Input
-		if (FlxG.keys.anyJustPressed(["F10"]))
-		{
-			_switchBackground = ! _switchBackground;
-		}
-		//if (FlxG.keys.anyJustPressed(["F12"]))
-		//{
-			//GameProperties.DEBUGDrawHitBoxes = !GameProperties.DEBUGDrawHitBoxes;
-		//}
-		
-		
 		//// Cleaning Up
 		CleanUp();
-		
 		
 		//// Additional Logic
 		MouseFollow();
@@ -170,22 +161,33 @@ class PlayState extends FlxState
 		PourIngredient();
 		
 		CheckMoneyNegative();
+		var us : Float = 0;
+		var ua : Float = 0;
+		var ul : Float = 0;
+		var ui : Float = 0;
 		
-
 		//// Update Block
 		if (!_loosing)
 		{
+			us =  Timer.stamp();
 			_assistantLeft.update();
 			_assistantRight.update();
 			
+			ua =  Timer.stamp();
 			_listPatients.update();
 			_listPotions.update();
+			ul =  Timer.stamp();
 			
 			_ingredientActive.update();
 			_ingredientNext.update();
+			ui =  Timer.stamp();
 		}
 		_screenOverlay.update();
 		
+		var u1 : Float = (ua - us) * 1000;
+		var u2 : Float = (ul - ua) * 1000;
+		var u3 : Float = (ui - ul) * 1000;
+		//trace ("all: " + (u1+u2+u3) + "	assistants: " + u1 + "	lists: " + u2 + "	ingredients: " + u3);
 	}	
 	
 	private function SwapIngredients () : Void 
@@ -252,6 +254,7 @@ class PlayState extends FlxState
 					_activeIngredient.setPosition( -500, -500);
 					_activeIngredient._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
 					_activeIngredient.Pour();
+					_activeIngredient.destroy();
 					_activeIngredient = null;
 					break;
 				}
@@ -293,7 +296,7 @@ class PlayState extends FlxState
 							_activePotion.setPosition( -500, -500);
 							_activePotion._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
 							_activePotion.Break();
-							
+							_activePotion.destroy();
 							_activePotion = null;
 							break;
 						}
@@ -421,7 +424,6 @@ class PlayState extends FlxState
 	{
 		var p : Patient  = new Patient(this);
 		_listPatients.add(p);
-		//var t : FlxTimer  = new FlxTimer(GameProperties.PatientSpawnTime, function (x:FlxTimer) : Void { SpawnNewPatient(); } );
 	}
 	
 	
@@ -438,7 +440,6 @@ class PlayState extends FlxState
 		
 		
 		_listPatients.draw();
-		
 		_listPotions.draw();
 		
 		_assistantLeft.draw();
@@ -447,11 +448,7 @@ class PlayState extends FlxState
 		_ingredientActive.draw();
 		_ingredientNext.draw();
 		
-		//var t : FlxText = new FlxText(286, 8, 156, Std.string(_money), 10, true);
-		
-		//t.draw();
-		
-		MoneyDisplay.drawSingleNumber(_money, new FlxPoint(286, 8));
+		_moneyText.drawSingleNumber(_money, new FlxPoint(412, 8));
 		
 		_screenOverlay.draw();
 		
@@ -460,16 +457,6 @@ class PlayState extends FlxState
 	public function AddPotion (p:Potion):Void
 	{
 		_listPotions.add(p);
-	}
-	
-	public function ResetActivePotion () : Void 
-	{
-		_activePotion = null;
-	}
-	
-	public function ResetActiveIngredient () : Void 
-	{
-		_activeIngredient = null;
 	}
 	
 	public function setActivePotion (p:Potion, offs:FlxPoint) : Void
