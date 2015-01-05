@@ -46,6 +46,8 @@ class PlayState extends FlxState
 	
 	private var _loosing : Bool;
 	
+	private var _screenOverlay : FlxSprite;
+	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -85,6 +87,11 @@ class PlayState extends FlxState
 		_backgroundSprite2.loadGraphic(AssetPaths.background__png, false, 192, 128);
 		_backgroundSprite2.scale.set(4, 4);
 		_backgroundSprite2.origin.set();
+		
+		_screenOverlay = new FlxSprite();
+		_screenOverlay.makeGraphic(FlxG.width, FlxG.height, FlxColorUtil.makeFromARGB(1.0, 0, 0, 0));
+		//_screenOverlay.color = FlxColorUtil.makeFromARGB(0.0, 255, 255, 255);
+		_screenOverlay.alpha = 0.0;
 		
 		_switchBackground = true;
 		
@@ -156,6 +163,8 @@ class PlayState extends FlxState
 		
 		PourIngredient();
 		
+		CheckMoneyNegative();
+		
 
 		//// Update Block
 		if (!_loosing)
@@ -169,6 +178,7 @@ class PlayState extends FlxState
 			_ingredientActive.update();
 			_ingredientNext.update();
 		}
+		_screenOverlay.update();
 		
 	}	
 	
@@ -434,6 +444,8 @@ class PlayState extends FlxState
 		var t : FlxText = new FlxText(286, 8, 156, Std.string(_money), 10, true);
 		t.draw();
 		
+		_screenOverlay.draw();
+		
 	}
 	
 	public function AddPotion (p:Potion):Void
@@ -489,18 +501,27 @@ class PlayState extends FlxState
 	private function RemoveMoney (amount : Int ) : Void 
 	{
 		_money -= amount;
+		
+		
+		
+	}
+	
+	function CheckMoneyNegative():Void 
+	{
 		if (_money < 0)
 		{
 			LooseGame();
 		}
-		
 	}
 	
 	public function LooseGame ( ) : Void 
 	{
 		_loosing = true;
-		FlxG.camera.fade();
-		var t: FlxTimer = new FlxTimer(1.0, function (t:FlxTimer) : Void 
+		//FlxG.camera.fade();
+		
+		FlxTween.tween(_screenOverlay, { alpha:1.0 }, 1.0 );
+		
+		var t: FlxTimer = new FlxTimer(1.25, function (t:FlxTimer) : Void 
 		{
 			FlxG.switchState(new MenuState());
 		});
