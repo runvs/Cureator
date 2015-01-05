@@ -448,7 +448,7 @@ class PlayState extends FlxState
 		_ingredientActive.draw();
 		_ingredientNext.draw();
 		
-		_moneyText.drawSingleNumber(_money, new FlxPoint(412, 8));
+		_moneyText.drawSingleNumber(_money, new FlxPoint(412, 16));
 		
 		_screenOverlay.draw();
 		

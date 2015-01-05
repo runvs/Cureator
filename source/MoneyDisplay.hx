@@ -22,6 +22,22 @@ class MoneyDisplay
 	{
 		_text = new FlxText();
 		_text.fieldWidth = _xOffs;
+		
+		_sprite = new FlxSprite();
+		_sprite.loadGraphic(AssetPaths.numbers_score__png, true, 4, 6);
+		_sprite.animation.add("1", [0], 10, true);
+		_sprite.animation.add("2", [1], 10, true);
+		_sprite.animation.add("3", [2], 10, true);
+		_sprite.animation.add("4", [3], 10, true);
+		_sprite.animation.add("5", [4], 10, true);
+		_sprite.animation.add("6", [5], 10, true);
+		_sprite.animation.add("7", [6], 10, true);
+		_sprite.animation.add("8", [7], 10, true);
+		_sprite.animation.add("9", [8], 10, true);
+		_sprite.animation.add("0", [9], 10, true);
+		_sprite.scale.set(4, 4);
+		_sprite.origin.set();
+		
 	}
 	
 	
@@ -51,6 +67,13 @@ class MoneyDisplay
 			//var t : FlxText = new FlxText(p.x, p.y, _xOffs, Std.string(n));
 			//t.draw();
 			//t.destroy();
+			
+			_sprite.x = p.x;
+			_sprite.y = p.y;
+			
+			_sprite.animation.play(Std.string(n), true);
+			_sprite.draw();
+			
 		}
 		else 
 		{
