@@ -50,6 +50,8 @@ class PlayState extends FlxState
 	
 	private var _screenOverlay : FlxSprite;
 	
+	private var _vignette : FlxSprite;
+	
 	
 	
 	/**
@@ -103,6 +105,12 @@ class PlayState extends FlxState
 		_screenOverlay.makeGraphic(FlxG.width, FlxG.height, FlxColorUtil.makeFromARGB(1.0, 0, 0, 0));
 		//_screenOverlay.color = FlxColorUtil.makeFromARGB(0.0, 255, 255, 255);
 		_screenOverlay.alpha = 0.0;
+		
+		_vignette  = new FlxSprite();
+		_vignette.loadGraphic(AssetPaths.vignette__png, false, 800, 600);
+		_vignette.origin.set();
+		_vignette.alpha = 0.4;
+		
 		
 		_switchBackground = true;
 		
@@ -451,6 +459,7 @@ class PlayState extends FlxState
 		_moneyText.drawSingleNumber(_money, new FlxPoint(412, 16));
 		
 		_screenOverlay.draw();
+		_vignette.draw();
 		
 	}
 	

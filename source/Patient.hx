@@ -288,7 +288,7 @@ class Patient extends FlxObject
 	public function Cure (p:Potion) : Void
 	{
 		var fullFilled : Bool = CheckFillLevel(p);
-		_sprite.animation.play("cured");
+
 		
 		// check if correct potion
 		if ( p._col == _col && fullFilled )
@@ -296,6 +296,7 @@ class Patient extends FlxObject
 			//trace ("cured");
 			_success = true;
 			_state.AddMoney(this);
+			_sprite.animation.play("cured");
 		}
 		else 
 		{

@@ -20,6 +20,8 @@ class MenuState extends FlxState
 	
 	private var _btn : FlxButton;
 	
+	private var _vignette :FlxSprite;
+	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -36,10 +38,15 @@ class MenuState extends FlxState
 		_btn.screenCenter();
 		
 		#if flash
-		FlxG.sound.playMusic(AssetPaths.cureator_OST_v__01__mp3, 1.0, true);
+		FlxG.sound.playMusic(AssetPaths.cureator_OST_v__02__mp3, 1.0, true);
 		#else
-		FlxG.sound.playMusic(AssetPaths.cureator_OST_v__01__ogg, 1.0, true);
+		FlxG.sound.playMusic(AssetPaths.cureator_OST_v__02__ogg, 1.0, true);
 		#end
+		
+		_vignette  = new FlxSprite();
+		_vignette.loadGraphic(AssetPaths.vignette__png, false, 800, 600);
+		_vignette.origin.set();
+		_vignette.alpha = 0.4;
 		
 	}
 	
@@ -75,5 +82,7 @@ class MenuState extends FlxState
 		FlxG.camera.fill( FlxColorUtil.makeFromARGB(1.0, 64, 64, 64));
 		_background.draw();
 		_btn.draw();
+		
+		_vignette.draw();
 	}
 }
