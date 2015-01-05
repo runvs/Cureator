@@ -58,7 +58,7 @@ class Potion extends FlxObject
 	{
 		//super.update();
 		_sprite.update();
-		//_hitBox.update();
+		_hitBox.update();
 		_sprite.x = _hitBox.x = x;
 		_sprite.y = _hitBox.y =  y;
 	}

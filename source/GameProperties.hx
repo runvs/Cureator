@@ -18,12 +18,12 @@ class GameProperties
 	
 	public static var JarSpawnTime : Float = 1.0;
 	
-	public static var PatientSpawnPosition : FlxPoint = new FlxPoint(-128, 300);
-	public static var PatientExitPosition : FlxPoint = new FlxPoint(800, 300);
+	public static var PatientSpawnPosition : FlxPoint = new FlxPoint(-128, 160);
+	public static var PatientExitPosition : FlxPoint = new FlxPoint(800, 160 );
 	
-	public static var PatientSeat1 : FlxPoint = new FlxPoint(128, 128);
-	public static var PatientSeat2 : FlxPoint = new FlxPoint(320, 128);
-	public static var PatientSeat3 : FlxPoint = new FlxPoint(512, 128);
+	public static var PatientSeat1 : FlxPoint = new FlxPoint(128, 160);
+	public static var PatientSeat2 : FlxPoint = new FlxPoint(320, 160);
+	public static var PatientSeat3 : FlxPoint = new FlxPoint(512, 160);
 	
 	public static var PatientSpeed : Float = 100;
 	public static var PatientSpawnTime : Float = 5;
