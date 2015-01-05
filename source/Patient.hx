@@ -37,6 +37,7 @@ class Patient extends FlxObject
 	public var _neededFillState  : FillState;
 	
 	private var _cureSound : FlxSound;
+	private var _wrongSound : FlxSound;
 	
 	
 	public function new(state:PlayState) 
@@ -79,12 +80,13 @@ class Patient extends FlxObject
 		
 		
 		_cureSound = new FlxSound();
+		_wrongSound = new FlxSound();
         #if flash
-        _cureSound = FlxG.sound.load(AssetPaths.cure__mp3, 0.25, false,false , false );
-        //soundBassDrop = FlxG.sound.load(AssetPaths.bassdrop__mp3, 0.85, false, false , false);
+        _cureSound = FlxG.sound.load(AssetPaths.cure__mp3, 0.25, false, false , false );
+        _wrongSound = FlxG.sound.load(AssetPaths.wrong__mp3, 0.25, false, false , false );
         #else
-        _cureSound = FlxG.sound.load(AssetPaths.cure__ogg, 0.25 , false , false , false);
-        //soundBassDrop = FlxG.sound.load(AssetPaths.bassdrop__ogg, 0.85, false, false , false);
+        _cureSound = FlxG.sound.load(AssetPaths.cure__ogg, 0.25 , false, false , false);
+        _wrongSound = FlxG.sound.load(AssetPaths.wrong__ogg, 0.25, false, false , false );
         #end
 		
 		
@@ -319,6 +321,7 @@ class Patient extends FlxObject
 		{
 			//trace ("not cured");
 			_success = false;
+			_wrongSound.play();
 		}
 		
 		MoveToExit();

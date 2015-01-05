@@ -32,7 +32,7 @@ class GameProperties
 	
 	public static var MoneyBaseGainValue : Float = 4;
 	public static var MoneyIngredientCost : Int = 1;
-	public static var MoneyStartAmount : Int = 1247;
+	public static var MoneyStartAmount : Int = 7;
 	
 	
 	//public static var DEBUGDrawHitBoxes : Bool = false;
