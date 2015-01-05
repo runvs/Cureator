@@ -14,7 +14,6 @@ import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxTimer;
-import haxe.ds.ObjectMap;
 
 
 /**
@@ -35,12 +34,11 @@ class PlayState extends FlxState
 	private var _backgroundSprite2 : FlxSprite;
 	private var _switchBackground : Bool;
 	
-	private var _pourIngredient : Ingredient;
-	
 	private var _activeIngredient : Ingredient;
 	private var _activeIngredientOffset : FlxPoint;
 	
 	private var _assistantLeft : LeftAssistant;
+	private var _assistantRight : RightAssistant;
 	
 	private var _actionCounter : Int;
 	
@@ -81,13 +79,14 @@ class PlayState extends FlxState
 		_backgroundSprite1.origin.set();
 		
 		_backgroundSprite2 = new FlxSprite();
-		_backgroundSprite2.loadGraphic(AssetPaths.blackbackground__png, false, 192, 128);
+		_backgroundSprite2.loadGraphic(AssetPaths.background__png, false, 192, 128);
 		_backgroundSprite2.scale.set(4, 4);
 		_backgroundSprite2.origin.set();
 		
 		_switchBackground = true;
 		
 		_assistantLeft = new LeftAssistant();
+		_assistantRight = new RightAssistant();
 		
 		_actionCounter = 0;
 	}
@@ -126,13 +125,17 @@ class PlayState extends FlxState
 	{
 		super.update();
 		
-		trace (_listPatients.length);
+		//trace (_listPatients.length);
 		
 		//// Input
 		if (FlxG.keys.anyJustPressed(["F10"]))
 		{
 			_switchBackground = ! _switchBackground;
 		}
+		//if (FlxG.keys.anyJustPressed(["F12"]))
+		//{
+			//GameProperties.DEBUGDrawHitBoxes = !GameProperties.DEBUGDrawHitBoxes;
+		//}
 		
 		
 		//// Cleaning Up
@@ -145,20 +148,19 @@ class PlayState extends FlxState
 		PickupObject();
 		DropObject();
 		
+		PourIngredient();
+		
 
 		//// Update Block
 		_assistantLeft.update();
+		_assistantRight.update();
+		
 		_listPatients.update();
 		_listPotions.update();
 		
 		_ingredientActive.update();
 		_ingredientNext.update();
 		
-		// TODO
-		if (_pourIngredient != null && _pourIngredient.active)
-		{
-			_pourIngredient.update();
-		}
 		
 		//trace (_listPotions.length);
 		
@@ -233,7 +235,6 @@ class PlayState extends FlxState
 					_activeIngredient.setPosition( -500, -500);
 					_activeIngredient._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
 					_activeIngredient.Pour();
-					_pourIngredient = _activeIngredient;
 					_activeIngredient = null;
 					break;
 				}
@@ -241,6 +242,7 @@ class PlayState extends FlxState
 			
 			if (dropped)
 			{
+				_assistantRight.Brew();
 				SwapIngredients();
 				SpawnNewIngredient();
 				MakePatientsMove();
@@ -305,6 +307,34 @@ class PlayState extends FlxState
 			
 			_activePotion = null;
 			_activeIngredient = null;
+		}
+	}
+	
+	function PourIngredient():Void 
+	{
+		if (_activeIngredient != null)
+		{
+			var nearPotion : Bool = false;
+			for ( i in 0 ... _listPotions.length)
+			{
+				var p : Potion = _listPotions.members[i];
+				if (FlxG.overlap(_activeIngredient._sprite, p._hitBox))
+				{	
+					if (FlxG.pixelPerfectOverlap(_activeIngredient._sprite, p._hitBox, 0))
+					{
+						nearPotion = true;
+						break;
+					}
+				}
+			}
+			if ( nearPotion )
+			{
+				_activeIngredient.Pour();
+			}
+			else 
+			{
+				_activeIngredient.Unpour();
+			}
 		}
 	}
 	
@@ -391,13 +421,10 @@ class PlayState extends FlxState
 		_listPotions.draw();
 		
 		_assistantLeft.draw();
+		_assistantRight.draw();
 		
 		_ingredientActive.draw();
 		_ingredientNext.draw();
-		if (_pourIngredient != null && _pourIngredient.active)
-		{
-			_pourIngredient.draw();
-		}
 	}
 	
 	public function AddPotion (p:Potion):Void
@@ -413,7 +440,6 @@ class PlayState extends FlxState
 	public function ResetActiveIngredient () : Void 
 	{
 		_activeIngredient = null;
-		_pourIngredient = null;
 	}
 	
 	public function setActivePotion (p:Potion, offs:FlxPoint) : Void

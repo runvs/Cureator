@@ -16,7 +16,7 @@ class Ingredient  extends FlxObject
 	
 	private var _state : PlayState;
 	
-	private var _sprite : FlxSprite;
+	public var _sprite : FlxSprite;
 	
 	public var _hitBox : FlxSprite;
 	
@@ -38,7 +38,7 @@ class Ingredient  extends FlxObject
 		_sprite = new FlxSprite(0, 0);
 		_sprite = GetSpriteFromColor(_col);
 		_hitBox = new FlxSprite(0, 0);
-		_hitBox.makeGraphic(64, 64, FlxColorUtil.makeFromARGB(0,1,1,1));
+		_hitBox.makeGraphic(64, 64, FlxColorUtil.makeFromARGB(0,100,100,100));
 		
 	}
 	
@@ -46,7 +46,10 @@ class Ingredient  extends FlxObject
 	{
 		_sprite.animation.play("pour", true);
 	}
-	
+	public function Unpour () : Void 
+	{
+		_sprite.animation.play("idle", true);
+	}
 
 	public function getColor () : Color 
 	{
@@ -102,18 +105,18 @@ class Ingredient  extends FlxObject
 		//spr.makeGraphic(16, 16, ColorManagement.GetIntFromEnum(c));
 		if (c == Color.Red)
 		{
-			spr.loadGraphic(AssetPaths.ingredient_red__png, true, 16, 16);
+			spr.loadGraphic(AssetPaths.ingredients_red__png, true, 16, 16);
 		}
 		if (c == Color.Green)
 		{
-			spr.loadGraphic(AssetPaths.ingredient_green__png, true, 16, 16);
+			spr.loadGraphic(AssetPaths.ingredients_green__png, true, 16, 16);
 		}
 		if (c == Color.Blue)
 		{
-			spr.loadGraphic(AssetPaths.ingredient_blue__png, true, 16, 16);
+			spr.loadGraphic(AssetPaths.ingredients_blue__png, true, 16, 16);
 		}
 		spr.animation.add("idle", [0], 30, true);
-		spr.animation.add("pour", [1, 2, 3, 4, 5, 6, 7], 30, false);
+		spr.animation.add("pour", [1], 30, true);
 		spr.animation.play("idle");
 		
 		

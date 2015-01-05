@@ -30,4 +30,6 @@ class GameProperties
 	
 	public static var ActionsForPatitentsToMove : Int = 2;
 	
+	//public static var DEBUGDrawHitBoxes : Bool = false;
+	
 }

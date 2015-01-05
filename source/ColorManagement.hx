@@ -1,6 +1,5 @@
 package ;
 import flixel.util.FlxColorUtil;
-import haxe.ds.ObjectMap;
 
 /**
  * ...

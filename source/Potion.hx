@@ -39,7 +39,7 @@ class Potion extends FlxObject
 		
 		GetSpriteFromColor();
 		_hitBox = new FlxSprite(0, 0);
-		_hitBox.makeGraphic(64, 64, FlxColorUtil.makeFromARGB(0.0,1,1,1));
+		_hitBox.makeGraphic(64, 64, FlxColorUtil.makeFromARGB(0,100,100,100));
 		
 		_originalPosition = new FlxPoint(x, y);
 		
