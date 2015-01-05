@@ -42,6 +42,7 @@ class PlayState extends FlxState
 	
 	private var _actionCounter : Int;
 	
+	private var _money : Int;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -89,6 +90,8 @@ class PlayState extends FlxState
 		_assistantRight = new RightAssistant();
 		
 		_actionCounter = 0;
+		
+		_money = 0;
 	}
 	
 	/**
@@ -425,6 +428,10 @@ class PlayState extends FlxState
 		
 		_ingredientActive.draw();
 		_ingredientNext.draw();
+		
+		var t : FlxText = new FlxText(286, 8, 156, Std.string(_money), 10, true);
+		t.draw();
+		
 	}
 	
 	public function AddPotion (p:Potion):Void
@@ -454,5 +461,28 @@ class PlayState extends FlxState
 		_activeIngredient = i;
 		_activeIngredientOffset = offs;
 	}
+	
+	public function AddMoney (p:Patient)
+	{
+		var amount : Float = 5;
+		
+		var factor : Float = 1.0;
+		if (p._neededFillState == FillState.Two)
+		{
+			factor = 2.0;
+		}
+		else if (p._neededFillState == FillState.Three)
+		{
+			factor = 3.0;
+		}
+		amount *= factor;
+		
+		var chair : Float = p._chair;
+		amount /= Math.sqrt(chair);
+		
+		var i : Int = Std.int(amount);
+		_money += i;
+	}
+	
 	
 }

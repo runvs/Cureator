@@ -28,11 +28,11 @@ class Patient extends FlxObject
 	
 	private var _targetPosition : FlxPoint;
 	
-	private var chair :Int;
+	public var _chair :Int;
 	
 	private var _success : Bool;
 	
-	private var _levelNeeded : FillState;
+	public var _neededFillState  : FillState;
 	
 	
 	public function new(state:PlayState) 
@@ -57,7 +57,7 @@ class Patient extends FlxObject
 		_hitBox.makeGraphic(128, 128, FlxColorUtil.makeFromARGB(0.0, 1, 1, 1));
 		
 		_targetPosition = GameProperties.PatientSeat1;
-		chair = 1;
+		_chair = 1;
 		
 		var distance : FlxVector = new FlxVector();
 		distance.set(_targetPosition.x - x, _targetPosition.y - y );
@@ -79,22 +79,22 @@ class Patient extends FlxObject
 	{
 		if (_status != PatientStatus.GoingOut)
 		{
-			if (chair == 1)
+			if (_chair == 1)
 			{
 				trace ("Move To 2");
-				chair = 2;
+				_chair = 2;
 				_targetPosition = GameProperties.PatientSeat2;
 			}
-			else if (chair == 2)
+			else if (_chair == 2)
 			{
 				trace ("Move To 3");
-				chair = 3;
+				_chair = 3;
 				_targetPosition = GameProperties.PatientSeat3;
 			}
-			else if (chair == 3 || chair == 4)
+			else if (_chair == 3 || _chair == 4)
 			{
 				trace ("Move To 4/Exit");
-				chair = 4;
+				_chair = 4;
 				_targetPosition = GameProperties.PatientExitPosition;
 				_status = PatientStatus.GoingOut;
 			}
@@ -161,7 +161,7 @@ class Patient extends FlxObject
 			//f = FillState.Three;
 			f = FillState.Two;
 		}
-		_levelNeeded = f;
+		_neededFillState = f;
 	}
 	
 	private function PickRandomColor(dl:DifficultyLevel) : Void
@@ -187,11 +187,11 @@ class Patient extends FlxObject
 			c = Color.Pink;
 		}
 		_col = c;
-		if (_levelNeeded == FillState.One && ( _col != Color.Green && _col != Color.Blue && _col != Color.Pink) )
+		if (_neededFillState == FillState.One && ( _col != Color.Green && _col != Color.Blue && _col != Color.Pink) )
 		{
 			PickRandomColor(dl);
 		}
-		if (_levelNeeded == FillState.Two && (_col != Color.Red && _col != Color.Green && _col != Color.Blue ) )
+		if (_neededFillState == FillState.Two && (_col != Color.Red && _col != Color.Green && _col != Color.Blue ) )
 		{
 			PickRandomColor(dl);
 		}
@@ -202,7 +202,7 @@ class Patient extends FlxObject
 		_sprite = new FlxSprite ();
 		//_sprite.makeGraphic(32, 32, ColorManagement.GetIntFromEnum(_col));
 		
-		if (_levelNeeded == FillState.One)
+		if (_neededFillState == FillState.One)
 		{
 			if (_col == Color.Green)
 			{
@@ -231,7 +231,7 @@ class Patient extends FlxObject
 			}
 			
 		}
-		else if (_levelNeeded == FillState.Two)
+		else if (_neededFillState == FillState.Two)
 		{
 			_sprite.loadGraphic(AssetPaths.patient_soldier__png, true, 32, 32);
 			_sprite.animation.add("cured", [0], 0, true);
@@ -262,21 +262,21 @@ class Patient extends FlxObject
 	{
 		_status = PatientStatus.GoingOut;
 		var _fullFilled : Bool = false;
-		if (_levelNeeded == FillState.One)
+		if (_neededFillState == FillState.One)
 		{
 			if (p._fill != FillState.Empty)
 			{
 				_fullFilled = true;
 			}
 		}
-		else if (_levelNeeded == FillState.Two)
+		else if (_neededFillState == FillState.Two)
 		{
 			if (p._fill == FillState.Two || p._fill == FillState.Three )
 			{
 				_fullFilled = true;
 			}
 		}
-		else if (_levelNeeded == FillState.Three)
+		else if (_neededFillState == FillState.Three)
 		{
 			if (p._fill == FillState.Three)
 			{
@@ -289,6 +289,7 @@ class Patient extends FlxObject
 			trace ("cured");
 			_success = true;
 			_targetPosition = GameProperties.PatientExitPosition;
+			_state.AddMoney(this);
 		}
 		else 
 		{

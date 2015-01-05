@@ -25,7 +25,7 @@ class GameProperties
 	public static var PatientSeat2 : FlxPoint = new FlxPoint(320, 128);
 	public static var PatientSeat3 : FlxPoint = new FlxPoint(512, 128);
 	
-	public static var PatientSpeed : Float = 80;
+	public static var PatientSpeed : Float = 100;
 	public static var PatientSpawnTime : Float = 5;
 	
 	public static var ActionsForPatitentsToMove : Int = 2;
