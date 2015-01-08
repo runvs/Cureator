@@ -52,6 +52,7 @@ class PlayState extends FlxState
 	
 	private var _vignette : FlxSprite;
 	
+	private var _fluids : Fluids;
 	
 	
 	/**
@@ -121,6 +122,8 @@ class PlayState extends FlxState
 		
 		_money = GameProperties.MoneyStartAmount;
 		_loosing = false;
+		
+		_fluids = new Fluids();
 	}
 	
 	/**
@@ -177,6 +180,8 @@ class PlayState extends FlxState
 		//// Update Block
 		if (!_loosing)
 		{
+			_fluids.update();
+			
 			us =  Timer.stamp();
 			_assistantLeft.update();
 			_assistantRight.update();
@@ -200,10 +205,11 @@ class PlayState extends FlxState
 	
 	private function SwapIngredients () : Void 
 	{
+
 		_ingredientActive = _ingredientNext;
 		_ingredientActive.setPosition(GameProperties.IngredientPositionActive.x, GameProperties.IngredientPositionActive.y);
 		_ingredientActive._isNextIngredient = false;
-		_ingredientActive._doDraw = false;
+		_ingredientActive._doDraw = false;	// a new active ingredient may be drawn only after the aassistant's pickup animation has been played
 	}
 	
 	function MouseFollow():Void 
@@ -273,6 +279,8 @@ class PlayState extends FlxState
 				_assistantRight.Brew();
 				SwapIngredients();
 				SpawnNewIngredient();
+				_fluids.SetLeftColor(_ingredientActive._col);
+				_fluids.SetRightColor(_ingredientNext._col);
 				MakePatientsMove();
 			}
 			else
@@ -408,7 +416,7 @@ class PlayState extends FlxState
 		var i : Ingredient = new Ingredient(GameProperties.IngredientPositionNext.x, GameProperties.IngredientPositionNext.y, c, this);
 		i._isNextIngredient = true;
 		_ingredientNext = i;
-		
+
 		
 		var t : FlxTimer  = new FlxTimer(LeftAssistant.GetAnimTimeUntilPotionApears(), function (t:FlxTimer) 
 		{
@@ -446,6 +454,7 @@ class PlayState extends FlxState
 			_backgroundSprite1.draw();
 		}
 		
+		_fluids.draw();
 		
 		_listPatients.draw();
 		_listPotions.draw();

@@ -78,7 +78,7 @@ class Ingredient  extends FlxObject
 	{
 		super.draw();
 		_hitBox.draw();
-		if (_doDraw)
+		if (!_isNextIngredient && _doDraw)
 		{
 			_sprite.draw();
 		}
