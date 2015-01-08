@@ -6,6 +6,7 @@ import flixel.FlxSprite;
 import flixel.util.FlxColorUtil;
 import flixel.plugin.MouseEventManager;
 import flixel.util.FlxPoint;
+import flixel.util.FlxTimer;
 
 
 /**
@@ -27,6 +28,8 @@ class Potion extends FlxObject
 	public var _originalPosition : FlxPoint;
 	
 	private var _complete :Bool;
+	
+	private var _smokePuff : SmokePuff;
 
 
 	public function new(X:Float=0, Y:Float=0, c:Color , state:PlayState ) 
@@ -42,6 +45,7 @@ class Potion extends FlxObject
 		_hitBox.makeGraphic(64, 64, FlxColorUtil.makeFromARGB(0,100,100,100));
 		
 		_originalPosition = new FlxPoint(x, y);
+		_smokePuff = null;
 		
 		_complete = false;
 		
@@ -61,6 +65,10 @@ class Potion extends FlxObject
 		_hitBox.update();
 		_sprite.x = _hitBox.x = x;
 		_sprite.y = _hitBox.y =  y;
+		if (_smokePuff != null)
+		{
+			_smokePuff.update();
+		}
 	}
 	
 	
@@ -69,6 +77,10 @@ class Potion extends FlxObject
 		super.draw();
 		_hitBox.draw();
 		_sprite.draw();
+		if (_smokePuff != null)
+		{
+			_smokePuff.draw();
+		}
 	}
 	
 	public function AddIngedient(i:Ingredient):Void
@@ -94,6 +106,15 @@ class Potion extends FlxObject
 		{
 			_fill = FillState.Three;
 		}
+		
+		_smokePuff = new SmokePuff(x + 24, y, _col);
+		
+		var t: FlxTimer = new FlxTimer(1.0, function (t:FlxTimer) : Void 
+		{
+			_smokePuff.destroy();
+			_smokePuff = null;
+		});
+		
 		
 		updateColor();
 	}

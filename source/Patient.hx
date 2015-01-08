@@ -39,6 +39,8 @@ class Patient extends FlxObject
 	private var _cureSound : FlxSound;
 	private var _wrongSound : FlxSound;
 	
+	private var _picker : PatientPicker;
+	
 	
 	public function new(state:PlayState) 
 	{
@@ -49,14 +51,16 @@ class Patient extends FlxObject
 		_status = PatientStatus.ComingIn;
 		
 		_success = false;
+		_picker = new PatientPicker();
+		PickRandomPatientAndLoadSprite();
+		//PickRandomFillState(DifficultyLevel.Hard);
+		//PickRandomColor(DifficultyLevel.Hard);
 		
-		PickRandomFillState(DifficultyLevel.Hard);
-		PickRandomColor(DifficultyLevel.Hard);
 		
 		x = GameProperties.PatientSpawnPosition.x;
 		y = GameProperties.PatientSpawnPosition.y;
 		
-		GetSpriteFromColor();
+		//GetSpriteFromColor();
 		
 		_hitBox = new FlxSprite();
 		_hitBox.makeGraphic(128, 128, FlxColorUtil.makeFromARGB(0.0, 1, 1, 1));
@@ -76,6 +80,8 @@ class Patient extends FlxObject
 			_status = PatientStatus.Waiting;
 		}}
 		);
+		
+
 		
 		
 		
@@ -162,118 +168,158 @@ class Patient extends FlxObject
 		exists = false;
 	}
 	
-	private function PickRandomFillState(dl:DifficultyLevel) : Void
+	private function PickRandomPatientAndLoadSprite() : Void
 	{
-		var f : FillState = null;
-		var r : Int = FlxRandom.intRanged(0, 2);		
-		if (r == 0)
+		var p : PatientDescriptor = null;
+		if (GameProperties.Difficulty == DifficultyLevel.Easy)
 		{
-			f = FillState.One;
+			p = _picker.RandomPatientWithFillstate(FillState.One);
 		}
-		else if (r == 1)
+		else if (GameProperties.Difficulty == DifficultyLevel.Medium)
 		{
-			f = FillState.Two;
+			if (FlxRandom.chanceRoll())
+			{
+				p = _picker.RandomPatientWithFillstate(FillState.One);
+			}
+			else
+			{
+				p = _picker.RandomPatientWithFillstate(FillState.Two);
+			}
 		}
-		else if (r == 2)
+		else
 		{
-			//f = FillState.Three;
-			f = FillState.Two;
+			p = _picker.RandomPatient();
 		}
-		_neededFillState = f;
-	}
-	
-	private function PickRandomColor(dl:DifficultyLevel) : Void
-	{
-		var c : Color;
+
+		_col = p._color;
+		_neededFillState = p._fill;
 		
-		var r : Int = FlxRandom.intRanged(0, 3);
-		
-		if ( r == 0)
-		{
-			c = Color.Red;
-		}
-		else if (r == 1)
-		{
-			c = Color.Green;
-		}
-		else if (r == 2)
-		{
-			c = Color.Blue;
-		}
-		else 
-		{
-			c = Color.Pink;
-		}
-		_col = c;
-		if (_neededFillState == FillState.One && ( _col != Color.Green && _col != Color.Blue && _col != Color.Pink) )
-		{
-			PickRandomColor(dl);
-		}
-		if (_neededFillState == FillState.Two && (_col != Color.Red && _col != Color.Green && _col != Color.Blue ) )
-		{
-			PickRandomColor(dl);
-		}
-	}
-	
-	function GetSpriteFromColor():Void 
-	{
 		_sprite = new FlxSprite ();
-		//_sprite.makeGraphic(32, 32, ColorManagement.GetIntFromEnum(_col));
-		
-		if (_neededFillState == FillState.One)
-		{
-			if (_col == Color.Green)
-			{
-				_sprite.loadGraphic(AssetPaths.patient_imp__png, true, 32, 32);
-				_sprite.animation.add("cured", [0], 0, true);
-				_sprite.animation.add("green", [2], 0, true);
-				_sprite.animation.play("green");
-			}
-			else if (_col == Color.Blue)
-			{
-				_sprite.loadGraphic(AssetPaths.patient_imp__png, true, 32, 32);
-				_sprite.animation.add("cured", [0], 0, true);
-				_sprite.animation.add("blue", [1], 0, true);
-				_sprite.animation.play("blue");
-			}
-			else if (_col == Color.Pink)
-			{
-				_sprite.loadGraphic(AssetPaths.patient_imp__png, true, 32, 32);
-				_sprite.animation.add("cured", [0], 0, true);
-				_sprite.animation.add("pink", [3], 0, true);
-				_sprite.animation.play("pink");
-			}
-			else 
-			{
-				
-			}
-			
-		}
-		else if (_neededFillState == FillState.Two)
-		{
-			_sprite.loadGraphic(AssetPaths.patient_soldier__png, true, 32, 32);
-			_sprite.animation.add("cured", [0], 0, true);
-			_sprite.animation.add("red", [1], 0, true);
-			_sprite.animation.add("green", [2], 0, true);
-			_sprite.animation.add("blue", [3], 0, true);
-			
-			
-			if (_col == Color.Red)
-			{
-				_sprite.animation.play("red");
-			}
-			if (_col == Color.Green)
-			{
-				_sprite.animation.play("green");
-			}
-			if (_col == Color.Blue)
-			{
-				_sprite.animation.play("blue");
-			}
-		}
-		
+		_sprite.loadGraphic(p._name, true, 32, 32);
+		_sprite.animation.add("color", p._frame, 6, true);
+		_sprite.animation.add("cured", [0], 6, true);
+		_sprite.animation.play("color");
 		_sprite.scale.set(4, 4);
+		//trace (pd);
 	}
+	
+	
+	//private function PickRandomFillState(dl:DifficultyLevel) : Void
+	//{
+		//var f : FillState = null;
+		//var r : Int = FlxRandom.intRanged(0, 2);		
+		//if (r == 0)
+		//{
+			//f = FillState.One;
+		//}
+		//else if (r == 1)
+		//{
+			//f = FillState.Two;
+		//}
+		//else if (r == 2)
+		//{
+			////f = FillState.Three;
+			//f = FillState.Two;
+		//}
+		//_neededFillState = f;
+	//}
+	//
+	//private function PickRandomColor(dl:DifficultyLevel) : Void
+	//{
+		//var c : Color;
+		//
+		//var r : Int = FlxRandom.intRanged(0, 3);
+		//
+		//if ( r == 0)
+		//{
+			//c = Color.Red;
+		//}
+		//else if (r == 1)
+		//{
+			//c = Color.Green;
+		//}
+		//else if (r == 2)
+		//{
+			//c = Color.Blue;
+		//}
+		//else 
+		//{
+			//c = Color.Pink;
+		//}
+		//_col = c;
+		//if (_neededFillState == FillState.One && ( _col != Color.Green && _col != Color.Blue && _col != Color.Pink) )
+		//{
+			//PickRandomColor(dl);
+		//}
+		//if (_neededFillState == FillState.Two && (_col != Color.Red && _col != Color.Green && _col != Color.Blue ) )
+		//{
+			//PickRandomColor(dl);
+		//}
+	//}
+	//
+	//function GetSpriteFromColor():Void 
+	//{
+		//_sprite = new FlxSprite ();
+		////_sprite.makeGraphic(32, 32, ColorManagement.GetIntFromEnum(_col));
+		//
+		//if (_neededFillState == FillState.One)
+		//{
+			//if (_col == Color.Green)
+			//{
+				//_sprite.loadGraphic(AssetPaths.patient_imp__png, true, 32, 32);
+				//_sprite.animation.add("cured", [0], 0, true);
+				//_sprite.animation.add("green", [2], 0, true);
+				//_sprite.animation.play("green");
+			//}
+			//else if (_col == Color.Blue)
+			//{
+				//_sprite.loadGraphic(AssetPaths.patient_imp__png, true, 32, 32);
+				//_sprite.animation.add("cured", [0], 0, true);
+				//_sprite.animation.add("blue", [1], 0, true);
+				//_sprite.animation.play("blue");
+			//}
+			//else if (_col == Color.Pink)
+			//{
+				//_sprite.loadGraphic(AssetPaths.patient_imp__png, true, 32, 32);
+				//_sprite.animation.add("cured", [0], 0, true);
+				//_sprite.animation.add("pink", [3], 0, true);
+				//_sprite.animation.play("pink");
+			//}
+			//else 
+			//{
+				//
+			//}
+			//
+		//}
+		//else if (_neededFillState == FillState.Two)
+		//{
+			//if (_col == Color.Red || _col == Color.Blue)
+			//{
+				//
+			//}
+			//_sprite.loadGraphic(AssetPaths.patient_soldier__png, true, 32, 32);
+			//_sprite.animation.add("cured", [0], 0, true);
+			//_sprite.animation.add("red", [1], 0, true);
+			//_sprite.animation.add("green", [2], 0, true);
+			//_sprite.animation.add("blue", [3], 0, true);
+			//
+			//
+			//if (_col == Color.Red)
+			//{
+				//_sprite.animation.play("red");
+			//}
+			//if (_col == Color.Green)
+			//{
+				//_sprite.animation.play("green");
+			//}
+			//if (_col == Color.Blue)
+			//{
+				//_sprite.animation.play("blue");
+			//}
+		//}
+		//
+		//_sprite.scale.set(4, 4);
+	//}
 	
 	function CheckFillLevel(p:Potion) : Bool 
 	{
@@ -323,9 +369,7 @@ class Patient extends FlxObject
 			_success = false;
 			_wrongSound.play();
 		}
-		
 		MoveToExit();
-
 	}
 	
 	

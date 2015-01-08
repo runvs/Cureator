@@ -44,7 +44,7 @@ class MoneyDisplay
 	public static function getDigitCount ( n : Int) : Int
 	{
 		var digits = 0;
-		if (n != 0)
+		if (n != 0)	// check 0 since this is a singularity for log.
 		{
 			var baseExponent : Float =  Math.log(n) / Math.log(10);
 			digits = Std.int(baseExponent) + 1;
@@ -54,20 +54,16 @@ class MoneyDisplay
 		return digits;
 	}
 	
+	// recursive function that goes over all digits.
 	public function drawSingleNumber ( n : Int, p:FlxPoint)	// recursive !
 	{
-		if (n < 10)
+		if (n < 0)
 		{
-			//trace (n);
-			//_text.x = p.x;
-			//_text.y = p.y;
-			//_text.text = Std.string(n);
-			//_text.draw();
-			
-			//var t : FlxText = new FlxText(p.x, p.y, _xOffs, Std.string(n));
-			//t.draw();
-			//t.destroy();
-			
+			n = -n;	// since i do not have a minus sign, but i don't want to go :q! here.
+		}
+		
+		if (n < 10)
+		{			
 			_sprite.x = p.x;
 			_sprite.y = p.y;
 			
