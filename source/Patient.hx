@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.system.FlxSound;
+import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColorUtil;
 import flixel.util.FlxPoint;
@@ -41,6 +42,10 @@ class Patient extends FlxObject
 	
 	private var _picker : PatientPicker;
 	
+	private var _speechbubble : FlxSprite;
+	
+	private var _cumulativeTimer: Float;
+	
 	
 	public function new(state:PlayState) 
 	{
@@ -56,11 +61,20 @@ class Patient extends FlxObject
 		//PickRandomFillState(DifficultyLevel.Hard);
 		//PickRandomColor(DifficultyLevel.Hard);
 		
+		_cumulativeTimer = 0;
 		
 		x = GameProperties.PatientSpawnPosition.x;
 		y = GameProperties.PatientSpawnPosition.y;
 		
-		//GetSpriteFromColor();
+		_speechbubble = new FlxSprite();
+		_speechbubble.loadGraphic(AssetPaths.Texts__png, true, 32, 15, false);
+		_speechbubble.scale.set(4, 4);
+		_speechbubble.origin.set(32,32);
+		_speechbubble.animation.add("thank", [0], 6, true);
+		_speechbubble.animation.add("no", [1], 6, true);
+		_speechbubble.animation.add("hey", [2], 6, true);
+		_speechbubble.animation.play("thank");
+		_speechbubble.alpha = 0.0;
 		
 		_hitBox = new FlxSprite();
 		_hitBox.makeGraphic(128, 128, FlxColorUtil.makeFromARGB(0.0, 1, 1, 1));
@@ -94,8 +108,6 @@ class Patient extends FlxObject
         _cureSound = FlxG.sound.load(AssetPaths.cure__ogg, 0.25 , false, false , false);
         _wrongSound = FlxG.sound.load(AssetPaths.wrong__ogg, 0.25, false, false , false );
         #end
-		
-		
 	}
 	
 	
@@ -114,6 +126,10 @@ class Patient extends FlxObject
 				//trace ("Move To 3");
 				_chair = 3;
 				_targetPosition = GameProperties.PatientSeat3;
+				
+			_speechbubble.animation.play("hey", true);
+			_speechbubble.alpha = 1.0;
+			FlxTween.tween(_speechbubble, { alpha:0.0 }, 1.5, { ease:FlxEase.cubeIn } );
 			}
 			else if (_chair == 3 || _chair == 4)
 			{
@@ -200,126 +216,7 @@ class Patient extends FlxObject
 		_sprite.animation.add("cured", [0], 6, true);
 		_sprite.animation.play("color");
 		_sprite.scale.set(4, 4);
-		//trace (pd);
 	}
-	
-	
-	//private function PickRandomFillState(dl:DifficultyLevel) : Void
-	//{
-		//var f : FillState = null;
-		//var r : Int = FlxRandom.intRanged(0, 2);		
-		//if (r == 0)
-		//{
-			//f = FillState.One;
-		//}
-		//else if (r == 1)
-		//{
-			//f = FillState.Two;
-		//}
-		//else if (r == 2)
-		//{
-			////f = FillState.Three;
-			//f = FillState.Two;
-		//}
-		//_neededFillState = f;
-	//}
-	//
-	//private function PickRandomColor(dl:DifficultyLevel) : Void
-	//{
-		//var c : Color;
-		//
-		//var r : Int = FlxRandom.intRanged(0, 3);
-		//
-		//if ( r == 0)
-		//{
-			//c = Color.Red;
-		//}
-		//else if (r == 1)
-		//{
-			//c = Color.Green;
-		//}
-		//else if (r == 2)
-		//{
-			//c = Color.Blue;
-		//}
-		//else 
-		//{
-			//c = Color.Pink;
-		//}
-		//_col = c;
-		//if (_neededFillState == FillState.One && ( _col != Color.Green && _col != Color.Blue && _col != Color.Pink) )
-		//{
-			//PickRandomColor(dl);
-		//}
-		//if (_neededFillState == FillState.Two && (_col != Color.Red && _col != Color.Green && _col != Color.Blue ) )
-		//{
-			//PickRandomColor(dl);
-		//}
-	//}
-	//
-	//function GetSpriteFromColor():Void 
-	//{
-		//_sprite = new FlxSprite ();
-		////_sprite.makeGraphic(32, 32, ColorManagement.GetIntFromEnum(_col));
-		//
-		//if (_neededFillState == FillState.One)
-		//{
-			//if (_col == Color.Green)
-			//{
-				//_sprite.loadGraphic(AssetPaths.patient_imp__png, true, 32, 32);
-				//_sprite.animation.add("cured", [0], 0, true);
-				//_sprite.animation.add("green", [2], 0, true);
-				//_sprite.animation.play("green");
-			//}
-			//else if (_col == Color.Blue)
-			//{
-				//_sprite.loadGraphic(AssetPaths.patient_imp__png, true, 32, 32);
-				//_sprite.animation.add("cured", [0], 0, true);
-				//_sprite.animation.add("blue", [1], 0, true);
-				//_sprite.animation.play("blue");
-			//}
-			//else if (_col == Color.Pink)
-			//{
-				//_sprite.loadGraphic(AssetPaths.patient_imp__png, true, 32, 32);
-				//_sprite.animation.add("cured", [0], 0, true);
-				//_sprite.animation.add("pink", [3], 0, true);
-				//_sprite.animation.play("pink");
-			//}
-			//else 
-			//{
-				//
-			//}
-			//
-		//}
-		//else if (_neededFillState == FillState.Two)
-		//{
-			//if (_col == Color.Red || _col == Color.Blue)
-			//{
-				//
-			//}
-			//_sprite.loadGraphic(AssetPaths.patient_soldier__png, true, 32, 32);
-			//_sprite.animation.add("cured", [0], 0, true);
-			//_sprite.animation.add("red", [1], 0, true);
-			//_sprite.animation.add("green", [2], 0, true);
-			//_sprite.animation.add("blue", [3], 0, true);
-			//
-			//
-			//if (_col == Color.Red)
-			//{
-				//_sprite.animation.play("red");
-			//}
-			//if (_col == Color.Green)
-			//{
-				//_sprite.animation.play("green");
-			//}
-			//if (_col == Color.Blue)
-			//{
-				//_sprite.animation.play("blue");
-			//}
-		//}
-		//
-		//_sprite.scale.set(4, 4);
-	//}
 	
 	function CheckFillLevel(p:Potion) : Bool 
 	{
@@ -362,12 +259,20 @@ class Patient extends FlxObject
 			_state.AddMoney(this);
 			_sprite.animation.play("cured");
 			_cureSound.play();
+			
+			_speechbubble.animation.play("thank", true);
+			_speechbubble.alpha = 1.0;
+			FlxTween.tween(_speechbubble, { alpha:0.0 }, 1.5, { ease:FlxEase.cubeIn } );
 		}
 		else 
 		{
 			//trace ("not cured");
 			_success = false;
 			_wrongSound.play();
+			
+			_speechbubble.animation.play("no", true);
+			_speechbubble.alpha = 1.0;
+			FlxTween.tween(_speechbubble, { alpha:0.0 }, 1.5, { ease:FlxEase.cubeIn } );
 		}
 		MoveToExit();
 	}
@@ -378,7 +283,11 @@ class Patient extends FlxObject
 		super.update();
 		_hitBox.x = _sprite.x = x;
 		_hitBox.y = _sprite.y = y;
-
+		_cumulativeTimer += FlxG.elapsed;
+		_speechbubble.setPosition(x + 3 * Math.sin(_cumulativeTimer*2), y + 7 * Math.cos(_cumulativeTimer*1.82373));
+		
+		_speechbubble.update();
+		
 	}
 	
 	public override function draw () : Void
@@ -386,6 +295,6 @@ class Patient extends FlxObject
 		super.draw();
 		_hitBox.draw();
 		_sprite.draw();
-		
+		_speechbubble.draw();
 	}
 }

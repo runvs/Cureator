@@ -42,7 +42,9 @@ class MenuState extends FlxState
 		_background = new FlxSprite();
 		_background.loadGraphic(AssetPaths.opening__png, false, 192, 128);
 		_background.scale.set(4, 4);
-		_background.screenCenter();
+		_background.x = 0;
+		_background.y = 0;
+		_background.origin.set();
 		add(_background);
 		
 
