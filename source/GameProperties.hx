@@ -34,7 +34,7 @@ class GameProperties
 	public static var MoneyIngredientCost : Int = 1;
 	public static var MoneyStartAmount : Int = 7;
 	
-	public static var Difficulty : DifficultyLevel  = DifficultyLevel.Hard;
+	public static var Difficulty : DifficultyLevel  = DifficultyLevel.Medium;
 	
 	
 	//public static var DEBUGDrawHitBoxes : Bool = false;

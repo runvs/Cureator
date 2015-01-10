@@ -222,7 +222,7 @@ class PatientPicker
 	
 	public function RandomPatient() : PatientDescriptor
 	{
-		var i : Int = FlxRandom.intRanged(0, list.length);
+		var i : Int = FlxRandom.intRanged(0, list.length-1);
 		return list.members[i];
 	}
 	

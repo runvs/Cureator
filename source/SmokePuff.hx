@@ -59,6 +59,18 @@ class SmokePuff extends FlxSprite
 		{
 			loadGraphic(AssetPaths.puff_yellowgreen__png, true, 16, 16);
 		}
+		else if (_col == Color.Red)
+		{
+			loadGraphic(AssetPaths.puff_red__png, true, 16, 16);
+		}
+		else if (_col == Color.Green)
+		{
+			loadGraphic(AssetPaths.puff_green__png, true, 16, 16);
+		}
+		else if (_col == Color.Blue)
+		{
+			loadGraphic(AssetPaths.puff_blue__png, true, 16, 16);
+		}
 		else 
 		{
 			loadGraphic(AssetPaths.puff_white__png, true, 16, 16);

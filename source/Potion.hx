@@ -107,7 +107,7 @@ class Potion extends FlxObject
 			_fill = FillState.Three;
 		}
 		
-		_smokePuff = new SmokePuff(x + 24, y, _col);
+		_smokePuff = new SmokePuff(x + 24, y-24, _col);
 		
 		var t: FlxTimer = new FlxTimer(1.0, function (t:FlxTimer) : Void 
 		{

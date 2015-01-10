@@ -5,16 +5,13 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxTypedGroup;
 import flixel.input.keyboard.FlxKeyboard;
-import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.ui.FlxButton;
 import flixel.util.FlxColorUtil;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxTimer;
-import haxe.Timer;
 
 
 /**
@@ -85,6 +82,8 @@ class PlayState extends FlxState
 		_ingredientNext = new Ingredient(GameProperties.IngredientPositionNext.x, GameProperties.IngredientPositionNext.y, Color.Green, this);
 		_ingredientNext ._isNextIngredient = true;
 		
+		
+		
 		_activePotion = null;
 		_activePotionOffset = new FlxPoint();
 		
@@ -105,7 +104,8 @@ class PlayState extends FlxState
 		_screenOverlay = new FlxSprite();
 		_screenOverlay.makeGraphic(FlxG.width, FlxG.height, FlxColorUtil.makeFromARGB(1.0, 0, 0, 0));
 		//_screenOverlay.color = FlxColorUtil.makeFromARGB(0.0, 255, 255, 255);
-		_screenOverlay.alpha = 0.0;
+		_screenOverlay.alpha = 1.0;
+		
 		
 		_vignette  = new FlxSprite();
 		_vignette.loadGraphic(AssetPaths.vignette__png, false, 800, 600);
@@ -124,6 +124,10 @@ class PlayState extends FlxState
 		_loosing = false;
 		
 		_fluids = new Fluids();
+		_fluids.SetLeftColor(_ingredientActive._col);
+		_fluids.SetRightColor(_ingredientNext._col);
+		
+		FlxTween.tween(_screenOverlay, { alpha : 0.0 }, 1.0);	// start the game with a tween.
 	}
 	
 	/**
@@ -182,18 +186,14 @@ class PlayState extends FlxState
 		{
 			_fluids.update();
 			
-			us =  Timer.stamp();
 			_assistantLeft.update();
 			_assistantRight.update();
-			
-			ua =  Timer.stamp();
+		
 			_listPatients.update();
 			_listPotions.update();
-			ul =  Timer.stamp();
 			
 			_ingredientActive.update();
 			_ingredientNext.update();
-			ui =  Timer.stamp();
 		}
 		_screenOverlay.update();
 		
