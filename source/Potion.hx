@@ -27,7 +27,6 @@ class Potion extends FlxObject
 	
 	public var _originalPosition : FlxPoint;
 	
-	private var _complete :Bool;
 	
 	private var _smokePuff : SmokePuff;
 
@@ -47,8 +46,6 @@ class Potion extends FlxObject
 		_originalPosition = new FlxPoint(x, y);
 		_smokePuff = null;
 		
-		_complete = false;
-		
 	}
 	
 
@@ -60,11 +57,12 @@ class Potion extends FlxObject
 	
 	public override function update():Void
 	{
-		//super.update();
 		_sprite.update();
 		_hitBox.update();
+		
 		_sprite.x = _hitBox.x = x;
 		_sprite.y = _hitBox.y =  y;
+		
 		if (_smokePuff != null)
 		{
 			_smokePuff.update();
@@ -140,20 +138,19 @@ class Potion extends FlxObject
 		{
 			_sprite = new FlxSprite();
 		}
+		
+		// select image file from color
 		if (_col == Color.Red)
 		{
 			_sprite.loadGraphic(AssetPaths.potion_red__png, true, 16, 16);
-			_complete = true;
 		}
 		else if (_col == Color.Green)
 		{
 			_sprite.loadGraphic(AssetPaths.potion_green__png, true, 16, 16);
-			_complete = true;
 		}
 		else if (_col == Color.Blue)
 		{
 			_sprite.loadGraphic(AssetPaths.potion_blue__png, true, 16, 16);
-			_complete = true;
 		}
 		else if (_col == Color.Yellow)
 		{
@@ -179,7 +176,6 @@ class Potion extends FlxObject
 		{
 			_sprite.loadGraphic(AssetPaths.potion_purple__png, true, 16, 16);
 		}
-		
 		else if (_col == Color.Cyan)
 		{
 			_sprite.loadGraphic(AssetPaths.potion_cyan__png, true, 16, 16);
@@ -194,7 +190,6 @@ class Potion extends FlxObject
 		}
 		else if (_col == Color.White)
 		{
-			trace ("loading white potion");
 			_sprite.loadGraphic(AssetPaths.potion_white__png, true, 16, 16);
 		}
 		else if (_col == Color.None)
@@ -203,19 +198,15 @@ class Potion extends FlxObject
 		}
 		else 
 		{
-			//_sprite.makeGraphic(16, 16, ColorManagement.GetIntFromEnum(_col));
-			_complete = false;
+			_sprite.loadGraphic(AssetPaths.potion_empty__png, true, 16, 16);
 		}
 		
-		if ( _complete && _col != Color.None)
+		if (_col != Color.None)
 		{
 			_sprite.animation.add ("One", [0], 30, true);
 			_sprite.animation.add ("Two", [1], 30, true);
 			_sprite.animation.add ("Three", [2], 30, true);
-		}
-		
-		if (_complete)
-		{
+			
 			if (_fill == FillState.One)
 			{
 				_sprite.animation.play("One");
@@ -229,6 +220,8 @@ class Potion extends FlxObject
 				_sprite.animation.play("Three");
 			}
 		}
+		
+		
 		_sprite.scale.set(4, 4);
 		_sprite.updateHitbox();
 	}
