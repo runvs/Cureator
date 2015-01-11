@@ -145,8 +145,53 @@ class PlayState extends FlxState
 	{
 		super.destroy();
 		
+		_listPatients.forEach(function(p:Patient):Void { p.destroy(); } );
+		_listPatients.clear();
+		_listPatients = null;
 		
+		_listPotions.forEach(function(p:Potion):Void { p.destroy(); } );
+		_listPotions.clear();
+		_listPotions = null;
 		
+		_backgroundSprite.destroy();
+		_backgroundSprite = null;
+		
+		_ingredientCurrent.destroy();
+		_ingredientCurrent = null;
+		
+		_ingredientNext.destroy();
+		_ingredientNext = null;
+		
+		_pickedPotion = null;
+		_pickedPotionOffset = null;
+		
+		_pickedIngredient = null;
+		_activeIngredientOffset = null;
+		
+		_assistantLeft.destroy();
+		_assistantLeft = null;
+		
+		_assistantRight.destroy();
+		_assistantRight = null;
+		
+		_assistantTop.destroy();
+		_assistantTop = null;
+
+		_moneyText = null;
+		_moneyNeededText = null;
+		
+		_screenOverlay.destroy();
+		_screenOverlay = null;
+		
+		_vignette.destroy();
+		_vignette = null;
+		
+		_fluids.destroy();
+		_fluids = null;
+		
+		_recipe.destroy();
+		_recipe = null;
+	
 	}
 
 	public function SetLevel(level:Int)
@@ -160,7 +205,7 @@ class PlayState extends FlxState
 		CalculateMoneyFromLevel();
 	}
 	
-	
+	// this function cleans any lists in the game and gets rid of no longer needed objects.
 	public function CleanUp():Void
 	{
 		{
@@ -177,18 +222,14 @@ class PlayState extends FlxState
 	}
 	
 	
-	/**
-	 * 
-	 * Function that is called once every frame.
-	 */
 	override public function update():Void
 	{
 		super.update();
 		
-		//// Cleaning Up
+		// Cleaning Up
 		CleanUp();
 		
-		//// Additional Logic
+		// Additional Logic
 		MouseFollow();
 		
 		PickupObject();
@@ -202,10 +243,6 @@ class PlayState extends FlxState
 		
 		CheckLevelPassed();
 		
-		var us : Float = 0;
-		var ua : Float = 0;
-		var ul : Float = 0;
-		var ui : Float = 0;
 		
 		//// Update Block
 		if (!_loosing)
@@ -224,22 +261,17 @@ class PlayState extends FlxState
 			_recipe.update();
 		}
 		_screenOverlay.update();
-		
-		var u1 : Float = (ua - us) * 1000;
-		var u2 : Float = (ul - ua) * 1000;
-		var u3 : Float = (ui - ul) * 1000;
-		//trace ("all: " + (u1+u2+u3) + "	assistants: " + u1 + "	lists: " + u2 + "	ingredients: " + u3);
 	}	
 	
 	private function SwapIngredients () : Void 
 	{
-
 		_ingredientCurrent = _ingredientNext;
 		_ingredientCurrent.setPosition(GameProperties.IngredientPositionActive.x, GameProperties.IngredientPositionActive.y);
 		_ingredientCurrent._isNextIngredient = false;
 		_ingredientCurrent._doDraw = false;	// a new active ingredient may be drawn only after the aassistant's pickup animation has been played
 	}
 	
+	// if any potion or ingredient is picked up, it shall follow the mouse. This creates a drag and drop feeling
 	function MouseFollow():Void 
 	{
 		if (_pickedPotion != null)
@@ -252,6 +284,7 @@ class PlayState extends FlxState
 		}
 	}
 	
+	// check, if any object has been picked up
 	function PickupObject():Void 
 	{
 		if (FlxG.mouse.justPressed)
@@ -278,26 +311,38 @@ class PlayState extends FlxState
 		}
 	}
 	
+	
+	function DropObject():Void 
+	{
+		if (FlxG.mouse.justReleased)
+		{
+			DropIngredient();
+			DropPotion();
+			
+			_pickedPotion = null;
+			_pickedIngredient = null;
+		}
+	}
+	
+	
 	function DropIngredient():Void 
 	{
 		if (_pickedIngredient != null && _pickedIngredient.active == true)
 		{
 			_assistantLeft.Release();
-			//trace ("active ingredient");
 			var dropped :Bool = false;
 			for ( i in 0 ... _listPotions.length)
 			{
 				var p : Potion = _listPotions.members[i];
 				if (FlxG.overlap(_pickedIngredient._hitBox, p._hitBox))
 				{	
-					//trace ("dropped");
 					dropped = true;
 					p.AddIngedient(_pickedIngredient);
 					p.updateColor();
 					_pickedIngredient.setPosition( -500, -500);
 					_pickedIngredient._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
 					_pickedIngredient.Pour();
-					_pickedIngredient.destroy();
+					_pickedIngredient.destroy();	// just make sure, this never exists any further
 					_pickedIngredient = null;
 					break;
 				}
@@ -314,7 +359,6 @@ class PlayState extends FlxState
 			}
 			else
 			{
-
 				FlxTween.tween(_pickedIngredient, { x:GameProperties.IngredientPositionActive.x, y:GameProperties.IngredientPositionActive.y }, 0.75, {ease:FlxEase.circOut});
 			}
 		}
@@ -332,8 +376,6 @@ class PlayState extends FlxState
 					var p : Patient = _listPatients.members[i];
 					if (p._status == PatientStatus.Waiting)
 					{
-						//trace(_activePotion._hitBox);
-						//trace(p._hitBox);
 						if (FlxG.overlap(p._hitBox, _pickedPotion._hitBox))
 						{	
 							dropped = true;
@@ -341,14 +383,13 @@ class PlayState extends FlxState
 							_pickedPotion.setPosition( -500, -500);
 							_pickedPotion._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
 							_pickedPotion.Break();
-							_pickedPotion.destroy();
+							_pickedPotion.destroy();	// just make sure, this never exists any further
 							_pickedPotion = null;
 							break;
 						}
 					}
 				}
 			}
-			
 			if ( dropped)
 			{
 				MakePatientsMove();
@@ -357,21 +398,6 @@ class PlayState extends FlxState
 			{
 				FlxTween.tween(_pickedPotion, { x:_pickedPotion._originalPosition.x, y:_pickedPotion._originalPosition.y }, 0.75, { ease:FlxEase.circOut } );
 			}
-		}
-	}
-	
-	function DropObject():Void 
-	{
-		if (FlxG.mouse.justReleased)
-		{
-			//trace ("mouse released");
-			DropIngredient();
-			
-			
-			DropPotion();
-			
-			_pickedPotion = null;
-			_pickedIngredient = null;
 		}
 	}
 	
@@ -403,6 +429,7 @@ class PlayState extends FlxState
 		}
 	}
 	
+	// this function checks if the neccesary number of actions has passed, so the patients move one position forward(right)
 	public function MakePatientsMove() : Void
 	{
 		_actionCounter++;
@@ -456,7 +483,6 @@ class PlayState extends FlxState
 	
 	public function SpawnNewJar (p:FlxPoint) : Void 
 	{
-		
 		var t : FlxTimer = new FlxTimer(GameProperties.JarSpawnTime, function (t:FlxTimer) : Void 
 		{
 			//trace ("spawn new jar");
@@ -474,9 +500,12 @@ class PlayState extends FlxState
 	
 	override public function draw () : Void 
 	{
-
+		// create a draworder for all the sprites in this scene
+		
+		// backbround
 		_backgroundSprite.draw();
 		
+		// objects
 		_fluids.draw();
 		
 		_listPatients.draw();
@@ -485,16 +514,18 @@ class PlayState extends FlxState
 		_assistantLeft.draw();
 		_assistantRight.draw();
 		
-		
 		_ingredientCurrent.draw();
 		_ingredientNext.draw();
 		
 		_assistantTop.draw();
+		
+		// hud/gui overlays
 		_recipe.draw();
 		
 		_moneyText.drawSingleNumber(_money, new FlxPoint(412, 16));
 		_moneyNeededText.drawSingleNumber(_moneyNeeded, new FlxPoint(468, 92));
 		
+		// visual effects
 		_screenOverlay.draw();
 		_vignette.draw();
 		
@@ -513,11 +544,11 @@ class PlayState extends FlxState
 	
 	public function setActiveIngredient (i:Ingredient, offs:FlxPoint) : Void 
 	{
-		//trace ("set active ingredient");
 		_pickedIngredient = i;
 		_activeIngredientOffset = offs;
 	}
 	
+	// this function calculates the amount of money a patient pays and adds it to the _money var
 	public function AddMoney (p:Patient)
 	{
 		var amount : Float = GameProperties.MoneyBaseGainValue;
@@ -540,12 +571,10 @@ class PlayState extends FlxState
 		_money += i;
 	}
 	
+	
 	private function RemoveMoney (amount : Int ) : Void 
 	{
 		_money -= amount;
-		
-		
-		
 	}
 	
 	function CheckMoneyNegative():Void 
