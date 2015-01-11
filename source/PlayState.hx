@@ -43,6 +43,10 @@ class PlayState extends FlxState
 	private var _money : Int;
 	private var _moneyText : MoneyDisplay;
 	
+	private var _level : Int;
+	private var _moneyNeeded :Int;
+	private var _moneyNeededText : MoneyDisplay;
+	
 	private var _loosing : Bool;
 	
 	private var _screenOverlay : FlxSprite;
@@ -50,6 +54,8 @@ class PlayState extends FlxState
 	private var _vignette : FlxSprite;
 	
 	private var _fluids : Fluids;
+	
+	
 	
 	
 	/**
@@ -63,7 +69,9 @@ class PlayState extends FlxState
 		//trace("");
 		//MoneyDisplay.drawSingleNumber(1234, new FlxPoint());
 		
-		_moneyText = new MoneyDisplay();
+		_moneyText = new MoneyDisplay(false);
+		_moneyNeededText  = new MoneyDisplay(true);
+		
 		
 		super.create();
 		_listPotions = new FlxTypedGroup<Potion>();
@@ -97,7 +105,7 @@ class PlayState extends FlxState
 		_backgroundSprite1.origin.set();
 		
 		_backgroundSprite2 = new FlxSprite();
-		_backgroundSprite2.loadGraphic(AssetPaths.background__png, false, 192, 128);
+		_backgroundSprite2.loadGraphic(AssetPaths.background_v2__png, false, 192, 128);
 		_backgroundSprite2.scale.set(4, 4);
 		_backgroundSprite2.origin.set();
 		
@@ -139,6 +147,17 @@ class PlayState extends FlxState
 		super.destroy();
 	}
 
+	public function SetLevel(level:Int)
+	{
+		if (level < 0)
+		{
+			throw ("error: Level negative");
+		}
+		_level = level;
+		
+		CalculateMoneyFromLevel();
+	}
+	
 	
 	public function CleanUp():Void
 	{
@@ -176,6 +195,18 @@ class PlayState extends FlxState
 		PourIngredient();
 		
 		CheckMoneyNegative();
+		
+		if (_money >= _moneyNeeded)
+		{
+			FlxTween.tween(_screenOverlay, { alpha:1.0 } );
+			var t:FlxTimer = new FlxTimer(1.25, function (t:FlxTimer) : Void 
+			{
+				var p: PlayState = new PlayState();
+				p.SetLevel(_level +1);
+				FlxG.switchState(p);
+			});
+		}
+		
 		var us : Float = 0;
 		var ua : Float = 0;
 		var ul : Float = 0;
@@ -466,6 +497,7 @@ class PlayState extends FlxState
 		_ingredientNext.draw();
 		
 		_moneyText.drawSingleNumber(_money, new FlxPoint(412, 16));
+		_moneyNeededText.drawSingleNumber(_moneyNeeded, new FlxPoint(468, 92));
 		
 		_screenOverlay.draw();
 		_vignette.draw();
@@ -526,6 +558,16 @@ class PlayState extends FlxState
 		{
 			LooseGame();
 		}
+	}
+	
+	function CalculateMoneyFromLevel():Void 
+	{
+
+		
+		var moneyIncrease: Int = 5;
+		var moneyStart : Int = 12;
+		
+		_moneyNeeded = moneyIncrease * _level  + moneyStart;
 	}
 	
 	public function LooseGame ( ) : Void 

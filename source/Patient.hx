@@ -53,6 +53,7 @@ class Patient extends FlxObject
 		
 		_state = state;
 		
+		
 		_status = PatientStatus.ComingIn;
 		
 		_success = false;

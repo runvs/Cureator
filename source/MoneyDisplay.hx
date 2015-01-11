@@ -15,16 +15,25 @@ class MoneyDisplay
 
 	private var _sprite :FlxSprite;
 		
-	private var _xOffs : Int = 24;
-	private var _text : FlxText;
+	private var _xOffs : Int;	
 	
-	public function new() 
-	{
-		_text = new FlxText();
-		_text.fieldWidth = _xOffs;
-		
+	private var _subText : Bool;
+	
+	
+	public function new(subText:Bool) 
+	{	
+		_subText = subText;
 		_sprite = new FlxSprite();
-		_sprite.loadGraphic(AssetPaths.numbers_score__png, true, 4, 6);
+		if (!_subText)	// main font for displaying numbers
+		{
+			_sprite.loadGraphic(AssetPaths.numbers_score__png, true, 4, 6);
+			_xOffs = 24;
+		}
+		else
+		{
+			_sprite.loadGraphic(AssetPaths.numbers_limit__png, true, 4, 6);
+			_xOffs = 24;
+		}
 		_sprite.animation.add("1", [0], 10, true);
 		_sprite.animation.add("2", [1], 10, true);
 		_sprite.animation.add("3", [2], 10, true);

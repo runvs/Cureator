@@ -125,7 +125,9 @@ class MenuState extends FlxState
 	
 	public function StartGame(): Void 
 	{
-		FlxG.switchState(new PlayState());
+		var p : PlayState = new PlayState();
+		p.SetLevel(0);
+		FlxG.switchState(p);
 	}
 	
 	public function DUp () :Void
