@@ -22,7 +22,7 @@ class Patient extends FlxObject
 
 	public var _col : Color;
 	
-	private var _sprite : FlxSprite;
+	public var _sprite : FlxSprite;
 	public var _hitBox : FlxSprite;
 	
 	private var _state : PlayState;
@@ -46,6 +46,11 @@ class Patient extends FlxObject
 	
 	private var _cumulativeTimer: Float;
 	
+	
+	public function IsCured () : Bool
+	{
+		return _success;
+	}
 	
 	public function new(state:PlayState) 
 	{
@@ -217,6 +222,7 @@ class Patient extends FlxObject
 		_sprite.animation.add("cured", [0], 6, true);
 		_sprite.animation.play("color");
 		_sprite.scale.set(4, 4);
+		//_sprite.updateHitbox();
 	}
 	
 	function CheckFillLevel(p:Potion) : Bool 

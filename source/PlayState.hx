@@ -37,6 +37,7 @@ class PlayState extends FlxState
 	
 	private var _assistantLeft : LeftAssistant;
 	private var _assistantRight : RightAssistant;
+	private var _assistantTop : FlxSprite;
 	
 	private var _actionCounter : Int;
 	
@@ -55,7 +56,7 @@ class PlayState extends FlxState
 	
 	private var _fluids : Fluids;
 	
-	
+	private var _recipe : RecipeDrawer;
 	
 	
 	/**
@@ -126,6 +127,14 @@ class PlayState extends FlxState
 		_assistantLeft = new LeftAssistant();
 		_assistantRight = new RightAssistant();
 		
+		_assistantTop = new FlxSprite();
+		_assistantTop.loadGraphic(AssetPaths.assistant3__png, false, 32, 16);
+		_assistantTop.scale.set(4, 4);
+		_assistantTop.origin.set();
+		_assistantTop.setPosition(128, 4);
+		
+		_recipe = new RecipeDrawer();
+		
 		_actionCounter = 0;
 		
 		_money = GameProperties.MoneyStartAmount;
@@ -192,6 +201,8 @@ class PlayState extends FlxState
 		PickupObject();
 		DropObject();
 		
+		DrawRecipeTooltip();
+		
 		PourIngredient();
 		
 		CheckMoneyNegative();
@@ -225,6 +236,8 @@ class PlayState extends FlxState
 			
 			_ingredientActive.update();
 			_ingredientNext.update();
+			
+			_recipe.update();
 		}
 		_screenOverlay.update();
 		
@@ -264,6 +277,7 @@ class PlayState extends FlxState
 			{
 				var p :FlxPoint = new FlxPoint(_ingredientActive.x - FlxG.mouse.x, _ingredientActive.y - FlxG.mouse.y);
 				setActiveIngredient(_ingredientActive, p);
+				
 				_assistantLeft.Take();
 			}
 			
@@ -493,8 +507,12 @@ class PlayState extends FlxState
 		_assistantLeft.draw();
 		_assistantRight.draw();
 		
+		
 		_ingredientActive.draw();
 		_ingredientNext.draw();
+		
+		_assistantTop.draw();
+		_recipe.draw();
 		
 		_moneyText.drawSingleNumber(_money, new FlxPoint(412, 16));
 		_moneyNeededText.drawSingleNumber(_moneyNeeded, new FlxPoint(468, 92));
@@ -568,6 +586,24 @@ class PlayState extends FlxState
 		var moneyStart : Int = 12;
 		
 		_moneyNeeded = moneyIncrease * _level  + moneyStart;
+	}
+	
+	function DrawRecipeTooltip():Void 
+	{
+		_recipe.alpha = 0.0;
+		// check any of the Patients
+		for ( i in 0 ... _listPatients.length)
+		{
+			var p : Patient = _listPatients.members[i];
+			if (!p.IsCured())
+			{
+				if (p._sprite.overlapsPoint(FlxG.mouse))
+				{
+					_recipe.alpha = 1.0;
+					_recipe.DrawColor(p);
+				}
+			}
+		}
 	}
 	
 	public function LooseGame ( ) : Void 
