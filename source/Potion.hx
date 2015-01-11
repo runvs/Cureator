@@ -19,14 +19,11 @@ class Potion extends FlxObject
 	public var _fill : FillState;
 	
 	private var _sprite : FlxSprite;
-	
 	public var _hitBox :FlxSprite;
 	
+	private var _state : PlayState;	// just for reference
 	
-	private var _state : PlayState;
-	
-	public var _originalPosition : FlxPoint;
-	
+	public var _originalPosition : FlxPoint;	// for snapping back
 	
 	private var _smokePuff : SmokePuff;
 
