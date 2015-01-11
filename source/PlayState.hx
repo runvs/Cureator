@@ -19,44 +19,42 @@ import flixel.util.FlxTimer;
  */
 class PlayState extends FlxState
 {
-	private var _listPatients : FlxTypedGroup<Patient>;
+	private var _listPatients : FlxTypedGroup<Patient>;	// list for all the patients in the game
+	private var _listPotions : FlxTypedGroup<Potion>;	// list for all the potions in the game
 	
-	private var _listPotions : FlxTypedGroup<Potion>;
-	private var _ingredientActive : Ingredient;
+	private var _backgroundSprite : FlxSprite;
+	
+	private var _ingredientCurrent : Ingredient;
 	private var _ingredientNext : Ingredient;
 	
-	private var _activePotion : Potion;
-	private var _activePotionOffset : FlxPoint;
+	private var _pickedPotion : Potion;			// the potion, the player is currently dragging&dropping around. can be null
+	private var _pickedPotionOffset : FlxPoint;
 	
-	private var _backgroundSprite1 : FlxSprite;
-	private var _backgroundSprite2 : FlxSprite;
-	private var _switchBackground : Bool;
-	
-	private var _activeIngredient : Ingredient;
+	private var _pickedIngredient : Ingredient; // the ingredient, the player is currently dragging&dropping around. can be null
 	private var _activeIngredientOffset : FlxPoint;
+
+	private var _assistantLeft : LeftAssistant;		// the Assistant holding the ingredients
+	private var _assistantRight : RightAssistant;	// the assistant mixing the potions
+	private var _assistantTop : FlxSprite;			// the assistant writing the numbers
 	
-	private var _assistantLeft : LeftAssistant;
-	private var _assistantRight : RightAssistant;
-	private var _assistantTop : FlxSprite;
+	private var _actionCounter : Int;	// how many actions have been passed since the patients moved forward?
 	
-	private var _actionCounter : Int;
+	private var _money : Int;	// current amount of money
+	private var _moneyText : MoneyDisplay;	// current money display
 	
-	private var _money : Int;
-	private var _moneyText : MoneyDisplay;
-	
-	private var _level : Int;
-	private var _moneyNeeded :Int;
+	private var _level : Int;	// current level. must be zero or positive
+	private var _moneyNeeded :Int;	// money needed to complete the current level
 	private var _moneyNeededText : MoneyDisplay;
 	
-	private var _loosing : Bool;
+	private var _loosing : Bool;	
 	
-	private var _screenOverlay : FlxSprite;
+	private var _screenOverlay : FlxSprite;	// the sprite to fade in/from black on level start/end
 	
-	private var _vignette : FlxSprite;
+	private var _vignette : FlxSprite;	// some graphical juice
 	
-	private var _fluids : Fluids;
+	private var _fluids : Fluids;	// the animation for the fluids in the left/right bottom corner
 	
-	private var _recipe : RecipeDrawer;
+	private var _recipe : RecipeDrawer;	// the recipe drawer
 	
 	
 	/**
@@ -64,65 +62,37 @@ class PlayState extends FlxState
 	 */
 	override public function create():Void
 	{
-		//MoneyDisplay.drawSingleNumber(5, new FlxPoint());
-		//trace("");
-		//MoneyDisplay.drawSingleNumber(11, new FlxPoint());
-		//trace("");
-		//MoneyDisplay.drawSingleNumber(1234, new FlxPoint());
-		
-		_moneyText = new MoneyDisplay(false);
-		_moneyNeededText  = new MoneyDisplay(true);
-		
-		
 		super.create();
-		_listPotions = new FlxTypedGroup<Potion>();
 		
+		_backgroundSprite = new FlxSprite();
+		_backgroundSprite.loadGraphic(AssetPaths.background_v2__png, false, 192, 128);
+		_backgroundSprite.scale.set(4, 4);
+		_backgroundSprite.origin.set();
+		
+
+		// create the default potions on the 1 to 4 plattforms
+		_listPotions = new FlxTypedGroup<Potion>();
 		_listPotions.add(new Potion(GameProperties.PotionPosition1.x, GameProperties.PotionPosition1.y, Color.None, this));
 		_listPotions.add(new Potion(GameProperties.PotionPosition2.x, GameProperties.PotionPosition2.y, Color.None, this));
 		_listPotions.add(new Potion(GameProperties.PotionPosition3.x, GameProperties.PotionPosition3.y, Color.None, this));
 		_listPotions.add(new Potion(GameProperties.PotionPosition4.x, GameProperties.PotionPosition4.y, Color.None, this));
 		
+		// create the first patient 
 		_listPatients = new FlxTypedGroup<Patient>();
 		SpawnNewPatient();
 		
-		
-		_ingredientActive = new Ingredient(GameProperties.IngredientPositionActive.x, GameProperties.IngredientPositionActive.y, Color.Red, this);
-		_ingredientActive._isNextIngredient = false;
+		// add active and next ingredient
+		_ingredientCurrent = new Ingredient(GameProperties.IngredientPositionActive.x, GameProperties.IngredientPositionActive.y, Color.Red, this);
+		_ingredientCurrent._isNextIngredient = false;
 		_ingredientNext = new Ingredient(GameProperties.IngredientPositionNext.x, GameProperties.IngredientPositionNext.y, Color.Green, this);
 		_ingredientNext ._isNextIngredient = true;
 		
+		_pickedPotion = null;
+		_pickedPotionOffset = new FlxPoint();
 		
-		
-		_activePotion = null;
-		_activePotionOffset = new FlxPoint();
-		
-		_activeIngredient = null;
+		_pickedIngredient = null;
 		_activeIngredientOffset = new FlxPoint();
 		
-		
-		_backgroundSprite1 = new FlxSprite();
-		_backgroundSprite1.loadGraphic(AssetPaths.sampletambev2black__png, false, 192, 128);
-		_backgroundSprite1.scale.set(4, 4);
-		_backgroundSprite1.origin.set();
-		
-		_backgroundSprite2 = new FlxSprite();
-		_backgroundSprite2.loadGraphic(AssetPaths.background_v2__png, false, 192, 128);
-		_backgroundSprite2.scale.set(4, 4);
-		_backgroundSprite2.origin.set();
-		
-		_screenOverlay = new FlxSprite();
-		_screenOverlay.makeGraphic(FlxG.width, FlxG.height, FlxColorUtil.makeFromARGB(1.0, 0, 0, 0));
-		//_screenOverlay.color = FlxColorUtil.makeFromARGB(0.0, 255, 255, 255);
-		_screenOverlay.alpha = 1.0;
-		
-		
-		_vignette  = new FlxSprite();
-		_vignette.loadGraphic(AssetPaths.vignette__png, false, 800, 600);
-		_vignette.origin.set();
-		_vignette.alpha = 0.4;
-		
-		
-		_switchBackground = true;
 		
 		_assistantLeft = new LeftAssistant();
 		_assistantRight = new RightAssistant();
@@ -140,9 +110,29 @@ class PlayState extends FlxState
 		_money = GameProperties.MoneyStartAmount;
 		_loosing = false;
 		
+		_moneyText = new MoneyDisplay(false);
+		_moneyNeededText  = new MoneyDisplay(true);
+		
 		_fluids = new Fluids();
-		_fluids.SetLeftColor(_ingredientActive._col);
+		_fluids.SetLeftColor(_ingredientCurrent._col);
 		_fluids.SetRightColor(_ingredientNext._col);
+		
+
+		
+		_screenOverlay = new FlxSprite();
+		_screenOverlay.makeGraphic(FlxG.width, FlxG.height, FlxColorUtil.makeFromARGB(1.0, 0, 0, 0));
+		//_screenOverlay.color = FlxColorUtil.makeFromARGB(0.0, 255, 255, 255);
+		_screenOverlay.alpha = 1.0;
+		
+		
+		_vignette  = new FlxSprite();
+		_vignette.loadGraphic(AssetPaths.vignette__png, false, 800, 600);
+		_vignette.origin.set();
+		_vignette.alpha = 0.4;
+		
+
+		
+	
 		
 		FlxTween.tween(_screenOverlay, { alpha : 0.0 }, 1.0);	// start the game with a tween.
 	}
@@ -154,6 +144,9 @@ class PlayState extends FlxState
 	override public function destroy():Void
 	{
 		super.destroy();
+		
+		
+		
 	}
 
 	public function SetLevel(level:Int)
@@ -207,16 +200,7 @@ class PlayState extends FlxState
 		
 		CheckMoneyNegative();
 		
-		if (_money >= _moneyNeeded)
-		{
-			FlxTween.tween(_screenOverlay, { alpha:1.0 } );
-			var t:FlxTimer = new FlxTimer(1.25, function (t:FlxTimer) : Void 
-			{
-				var p: PlayState = new PlayState();
-				p.SetLevel(_level +1);
-				FlxG.switchState(p);
-			});
-		}
+		CheckLevelPassed();
 		
 		var us : Float = 0;
 		var ua : Float = 0;
@@ -234,7 +218,7 @@ class PlayState extends FlxState
 			_listPatients.update();
 			_listPotions.update();
 			
-			_ingredientActive.update();
+			_ingredientCurrent.update();
 			_ingredientNext.update();
 			
 			_recipe.update();
@@ -250,21 +234,21 @@ class PlayState extends FlxState
 	private function SwapIngredients () : Void 
 	{
 
-		_ingredientActive = _ingredientNext;
-		_ingredientActive.setPosition(GameProperties.IngredientPositionActive.x, GameProperties.IngredientPositionActive.y);
-		_ingredientActive._isNextIngredient = false;
-		_ingredientActive._doDraw = false;	// a new active ingredient may be drawn only after the aassistant's pickup animation has been played
+		_ingredientCurrent = _ingredientNext;
+		_ingredientCurrent.setPosition(GameProperties.IngredientPositionActive.x, GameProperties.IngredientPositionActive.y);
+		_ingredientCurrent._isNextIngredient = false;
+		_ingredientCurrent._doDraw = false;	// a new active ingredient may be drawn only after the aassistant's pickup animation has been played
 	}
 	
 	function MouseFollow():Void 
 	{
-		if (_activePotion != null)
+		if (_pickedPotion != null)
 		{
-			_activePotion.setPosition(FlxG.mouse.x + _activePotionOffset.x, FlxG.mouse.y + _activePotionOffset.y);
+			_pickedPotion.setPosition(FlxG.mouse.x + _pickedPotionOffset.x, FlxG.mouse.y + _pickedPotionOffset.y);
 		}
-		else if (_activeIngredient != null)
+		else if (_pickedIngredient != null)
 		{
-			_activeIngredient.setPosition(FlxG.mouse.x + _activeIngredientOffset.x, FlxG.mouse.y + _activeIngredientOffset.y);
+			_pickedIngredient.setPosition(FlxG.mouse.x + _activeIngredientOffset.x, FlxG.mouse.y + _activeIngredientOffset.y);
 		}
 	}
 	
@@ -273,10 +257,10 @@ class PlayState extends FlxState
 		if (FlxG.mouse.justPressed)
 		{
 			// check active ingredient
-			if (_ingredientActive._hitBox.overlapsPoint(FlxG.mouse))
+			if (_ingredientCurrent._hitBox.overlapsPoint(FlxG.mouse))
 			{
-				var p :FlxPoint = new FlxPoint(_ingredientActive.x - FlxG.mouse.x, _ingredientActive.y - FlxG.mouse.y);
-				setActiveIngredient(_ingredientActive, p);
+				var p :FlxPoint = new FlxPoint(_ingredientCurrent.x - FlxG.mouse.x, _ingredientCurrent.y - FlxG.mouse.y);
+				setActiveIngredient(_ingredientCurrent, p);
 				
 				_assistantLeft.Take();
 			}
@@ -296,7 +280,7 @@ class PlayState extends FlxState
 	
 	function DropIngredient():Void 
 	{
-		if (_activeIngredient != null && _activeIngredient.active == true)
+		if (_pickedIngredient != null && _pickedIngredient.active == true)
 		{
 			_assistantLeft.Release();
 			//trace ("active ingredient");
@@ -304,17 +288,17 @@ class PlayState extends FlxState
 			for ( i in 0 ... _listPotions.length)
 			{
 				var p : Potion = _listPotions.members[i];
-				if (FlxG.overlap(_activeIngredient._hitBox, p._hitBox))
+				if (FlxG.overlap(_pickedIngredient._hitBox, p._hitBox))
 				{	
 					//trace ("dropped");
 					dropped = true;
-					p.AddIngedient(_activeIngredient);
+					p.AddIngedient(_pickedIngredient);
 					p.updateColor();
-					_activeIngredient.setPosition( -500, -500);
-					_activeIngredient._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
-					_activeIngredient.Pour();
-					_activeIngredient.destroy();
-					_activeIngredient = null;
+					_pickedIngredient.setPosition( -500, -500);
+					_pickedIngredient._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
+					_pickedIngredient.Pour();
+					_pickedIngredient.destroy();
+					_pickedIngredient = null;
 					break;
 				}
 			}
@@ -324,24 +308,24 @@ class PlayState extends FlxState
 				_assistantRight.Brew();
 				SwapIngredients();
 				SpawnNewIngredient();
-				_fluids.SetLeftColor(_ingredientActive._col);
+				_fluids.SetLeftColor(_ingredientCurrent._col);
 				_fluids.SetRightColor(_ingredientNext._col);
 				MakePatientsMove();
 			}
 			else
 			{
 
-				FlxTween.tween(_activeIngredient, { x:GameProperties.IngredientPositionActive.x, y:GameProperties.IngredientPositionActive.y }, 0.75, {ease:FlxEase.circOut});
+				FlxTween.tween(_pickedIngredient, { x:GameProperties.IngredientPositionActive.x, y:GameProperties.IngredientPositionActive.y }, 0.75, {ease:FlxEase.circOut});
 			}
 		}
 	}
 	
 	function DropPotion():Void 
 	{
-		if (_activePotion != null)
+		if (_pickedPotion != null)
 		{
 			var dropped :Bool = false;
-			if ( _activePotion._fill !=  FillState.Empty)
+			if ( _pickedPotion._fill !=  FillState.Empty)
 			{
 				for ( i in 0 ... _listPatients.length)
 				{
@@ -350,15 +334,15 @@ class PlayState extends FlxState
 					{
 						//trace(_activePotion._hitBox);
 						//trace(p._hitBox);
-						if (FlxG.overlap(p._hitBox, _activePotion._hitBox))
+						if (FlxG.overlap(p._hitBox, _pickedPotion._hitBox))
 						{	
 							dropped = true;
-							p.Cure(_activePotion);
-							_activePotion.setPosition( -500, -500);
-							_activePotion._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
-							_activePotion.Break();
-							_activePotion.destroy();
-							_activePotion = null;
+							p.Cure(_pickedPotion);
+							_pickedPotion.setPosition( -500, -500);
+							_pickedPotion._hitBox.setPosition( -500, -500);	// dunno, why i need to update the hitboxes position manually. probably, because update woud have to be called.
+							_pickedPotion.Break();
+							_pickedPotion.destroy();
+							_pickedPotion = null;
 							break;
 						}
 					}
@@ -371,7 +355,7 @@ class PlayState extends FlxState
 			}
 			else
 			{
-				FlxTween.tween(_activePotion, { x:_activePotion._originalPosition.x, y:_activePotion._originalPosition.y }, 0.75, { ease:FlxEase.circOut } );
+				FlxTween.tween(_pickedPotion, { x:_pickedPotion._originalPosition.x, y:_pickedPotion._originalPosition.y }, 0.75, { ease:FlxEase.circOut } );
 			}
 		}
 	}
@@ -386,22 +370,22 @@ class PlayState extends FlxState
 			
 			DropPotion();
 			
-			_activePotion = null;
-			_activeIngredient = null;
+			_pickedPotion = null;
+			_pickedIngredient = null;
 		}
 	}
 	
 	function PourIngredient():Void 
 	{
-		if (_activeIngredient != null)
+		if (_pickedIngredient != null)
 		{
 			var nearPotion : Bool = false;
 			for ( i in 0 ... _listPotions.length)
 			{
 				var p : Potion = _listPotions.members[i];
-				if (FlxG.overlap(_activeIngredient._sprite, p._hitBox))
+				if (FlxG.overlap(_pickedIngredient._sprite, p._hitBox))
 				{	
-					if (FlxG.pixelPerfectOverlap(_activeIngredient._sprite, p._hitBox, 0))
+					if (FlxG.pixelPerfectOverlap(_pickedIngredient._sprite, p._hitBox, 0))
 					{
 						nearPotion = true;
 						break;
@@ -410,11 +394,11 @@ class PlayState extends FlxState
 			}
 			if ( nearPotion )
 			{
-				_activeIngredient.Pour();
+				_pickedIngredient.Pour();
 			}
 			else 
 			{
-				_activeIngredient.Unpour();
+				_pickedIngredient.Unpour();
 			}
 		}
 	}
@@ -465,7 +449,7 @@ class PlayState extends FlxState
 		
 		var t : FlxTimer  = new FlxTimer(LeftAssistant.GetAnimTimeUntilPotionApears(), function (t:FlxTimer) 
 		{
-			_ingredientActive._doDraw = true;
+			_ingredientCurrent._doDraw = true;
 		} 
 		);
 	}
@@ -490,14 +474,8 @@ class PlayState extends FlxState
 	
 	override public function draw () : Void 
 	{
-		if (_switchBackground )
-		{
-			_backgroundSprite2.draw();
-		}
-		else 
-		{
-			_backgroundSprite1.draw();
-		}
+
+		_backgroundSprite.draw();
 		
 		_fluids.draw();
 		
@@ -508,7 +486,7 @@ class PlayState extends FlxState
 		_assistantRight.draw();
 		
 		
-		_ingredientActive.draw();
+		_ingredientCurrent.draw();
 		_ingredientNext.draw();
 		
 		_assistantTop.draw();
@@ -529,14 +507,14 @@ class PlayState extends FlxState
 	
 	public function setActivePotion (p:Potion, offs:FlxPoint) : Void
 	{
-		_activePotion  = p;
-		_activePotionOffset = offs;
+		_pickedPotion  = p;
+		_pickedPotionOffset = offs;
 	}
 	
 	public function setActiveIngredient (i:Ingredient, offs:FlxPoint) : Void 
 	{
 		//trace ("set active ingredient");
-		_activeIngredient = i;
+		_pickedIngredient = i;
 		_activeIngredientOffset = offs;
 	}
 	
@@ -578,10 +556,35 @@ class PlayState extends FlxState
 		}
 	}
 	
+	public function LooseGame ( ) : Void 
+	{
+		_loosing = true;
+		
+		FlxTween.tween(_screenOverlay, { alpha:1.0 }, 1.0 );
+		
+		var t: FlxTimer = new FlxTimer(1.25, function (t:FlxTimer) : Void 
+		{
+			FlxG.switchState(new MenuState());
+		});
+	}
+	
+	function CheckLevelPassed():Void 
+	{
+		if (_money >= _moneyNeeded)
+		{
+			FlxTween.tween(_screenOverlay, { alpha:1.0 } );
+			_loosing = true;
+			var t:FlxTimer = new FlxTimer(1.25, function (t:FlxTimer) : Void 
+			{
+				var p: PlayState = new PlayState();
+				p.SetLevel(_level +1);
+				FlxG.switchState(p);
+			});
+		}
+	}
+	
 	function CalculateMoneyFromLevel():Void 
 	{
-
-		
 		var moneyIncrease: Int = 5;
 		var moneyStart : Int = 12;
 		
@@ -604,27 +607,6 @@ class PlayState extends FlxState
 				}
 			}
 		}
-	}
-	
-	public function LooseGame ( ) : Void 
-	{
-		_loosing = true;
-		//FlxG.camera.fade();
-		
-		FlxTween.tween(_screenOverlay, { alpha:1.0 }, 1.0 );
-		
-		var t: FlxTimer = new FlxTimer(1.25, function (t:FlxTimer) : Void 
-		{
-			FlxG.switchState(new MenuState());
-		});
-		//FlxTween.tween ( FlxG.camera.color, { r:0, g:0, b:0 }, 1.0, 
-		//{
-			//complete : function (t:FlxTween):Void
-			//{
-				//FlxG.switchState(new MenuState());
-			//}
-		//} );
-		
 	}
 	
 	
