@@ -72,6 +72,8 @@ class Patient extends FlxObject
 		x = GameProperties.PatientSpawnPosition.x;
 		y = GameProperties.PatientSpawnPosition.y;
 		
+		
+		
 		_speechbubble = new FlxSprite();
 		_speechbubble.loadGraphic(AssetPaths.Texts__png, true, 32, 15, false);
 		_speechbubble.scale.set(4, 4);
@@ -84,6 +86,7 @@ class Patient extends FlxObject
 		
 		_hitBox = new FlxSprite();
 		_hitBox.makeGraphic(128, 128, FlxColorUtil.makeFromARGB(0.0, 1, 1, 1));
+		
 		
 		_targetPosition = GameProperties.PatientSeat1;
 		_chair = 1;
@@ -222,7 +225,10 @@ class Patient extends FlxObject
 		_sprite.animation.add("cured", [0], 6, true);
 		_sprite.animation.play("color");
 		_sprite.scale.set(4, 4);
-		//_sprite.updateHitbox();
+
+		_sprite.origin.set();
+		_sprite.updateHitbox();
+		
 	}
 	
 	function CheckFillLevel(p:Potion) : Bool 
@@ -256,7 +262,7 @@ class Patient extends FlxObject
 	public function Cure (p:Potion) : Void
 	{
 		var fullFilled : Bool = CheckFillLevel(p);
-
+		//trace (fullFilled);
 		
 		// check if correct potion
 		if ( p._col == _col && fullFilled )
@@ -288,8 +294,8 @@ class Patient extends FlxObject
 	public override function update () : Void
 	{
 		super.update();
-		_hitBox.x = _sprite.x = x;
-		_hitBox.y = _sprite.y = y;
+		_hitBox.x = _sprite.x = x-64;
+		_hitBox.y = _sprite.y = y-64;
 		_cumulativeTimer += FlxG.elapsed;
 		_speechbubble.setPosition(x + 3 * Math.sin(_cumulativeTimer*2), y + 7 * Math.cos(_cumulativeTimer*1.82373));
 		

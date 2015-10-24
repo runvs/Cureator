@@ -629,7 +629,7 @@ class PlayState extends FlxState
 			var p : Patient = _listPatients.members[i];
 			if (!p.IsCured())
 			{
-				if (p._sprite.overlapsPoint(FlxG.mouse))
+				if (p._hitBox.overlapsPoint(FlxG.mouse))
 				{
 					_recipe.alpha = 1.0;
 					_recipe.DrawColor(p);

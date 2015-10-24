@@ -62,3 +62,4 @@ Temporary Items
 
 # sftp configuration file
 sftp-config.json
+assets/data/data-goes-here.txt

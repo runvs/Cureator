@@ -125,10 +125,10 @@ class PatientPicker
 		list.add(p);
 		
 		//-------------------------------------
-		//	L2 YellowGreen
+		//	L3 YellowGreen
 		//-------------------------------------
 		p = new PatientDescriptor();
-		p._fill = FillState.Two;
+		p._fill = FillState.Three;
 		p._color = Color.YellowGreen;
 		p._name = "assets/images/patient_peasant.png";
 		p._frame = [3];
@@ -145,10 +145,10 @@ class PatientPicker
 		list.add(p);
 		
 		//-------------------------------------
-		//	L2 SeaGreen
+		//	L3 SeaGreen
 		//-------------------------------------
 		p = new PatientDescriptor();
-		p._fill = FillState.Two;
+		p._fill = FillState.Three;
 		p._color = Color.SeaGreen;
 		p._name = "assets/images/patient_peasant.png";
 		p._frame = [2];
@@ -179,20 +179,20 @@ class PatientPicker
 		list.add(p);
 		
 		//-------------------------------------
-		//	L3 Yellow
+		//	L2 Yellow
 		//-------------------------------------
 		p = new PatientDescriptor();
-		p._fill = FillState.Three;
+		p._fill = FillState.Two;
 		p._color = Color.Yellow;
 		p._name = "assets/images/patient_priest.png";
 		p._frame = [2];
 		list.add(p);
 		
 		//-------------------------------------
-		//	L3 Magenta
+		//	L2 Magenta
 		//-------------------------------------
 		p = new PatientDescriptor();
-		p._fill = FillState.Three;
+		p._fill = FillState.Two;
 		p._color = Color.Magenta;
 		p._name = "assets/images/patient_priest.png";
 		p._frame = [3];
@@ -212,7 +212,7 @@ class PatientPicker
 		//	L3 Cyan
 		//-------------------------------------
 		p = new PatientDescriptor();
-		p._fill = FillState.Three;
+		p._fill = FillState.Two;
 		p._color = Color.Cyan;
 		p._name = "assets/images/patient_priest.png";
 		p._frame = [1];
