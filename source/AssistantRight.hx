@@ -8,7 +8,7 @@ import flixel.util.FlxTimer;
  * ...
  * @author 
  */
-class RightAssistant extends FlxObject
+class AssistantRight extends FlxObject
 {
 	private var _sprite : FlxSprite;
 

@@ -33,9 +33,9 @@ class PlayState extends FlxState
 	private var _pickedIngredient : Ingredient; // the ingredient, the player is currently dragging&dropping around. can be null
 	private var _activeIngredientOffset : FlxPoint;
 
-	private var _assistantLeft : LeftAssistant;		// the Assistant holding the ingredients
-	private var _assistantRight : RightAssistant;	// the assistant mixing the potions
-	private var _assistantTop : FlxSprite;			// the assistant writing the numbers
+	private var _assistantLeft : AssistantLeft;		// the Assistant holding the ingredients
+	private var _assistantRight : AssistantRight;	// the assistant mixing the potions
+	private var _assistantTop : AssistantTop;			// the assistant writing the numbers
 	
 	private var _actionCounter : Int;	// how many actions have been passed since the patients moved forward?
 	
@@ -94,14 +94,9 @@ class PlayState extends FlxState
 		_activeIngredientOffset = new FlxPoint();
 		
 		
-		_assistantLeft = new LeftAssistant();
-		_assistantRight = new RightAssistant();
-		
-		_assistantTop = new FlxSprite();
-		_assistantTop.loadGraphic(AssetPaths.assistant3__png, false, 32, 16);
-		_assistantTop.scale.set(4, 4);
-		_assistantTop.origin.set();
-		_assistantTop.setPosition(128, 4);
+		_assistantLeft = new AssistantLeft();
+		_assistantRight = new AssistantRight();
+		_assistantTop = new AssistantTop();
 		
 		_recipe = new RecipeDrawer();
 		
@@ -251,6 +246,7 @@ class PlayState extends FlxState
 			
 			_assistantLeft.update();
 			_assistantRight.update();
+			_assistantTop.update();
 		
 			_listPatients.update();
 			_listPotions.update();
@@ -474,7 +470,7 @@ class PlayState extends FlxState
 		_ingredientNext = i;
 
 		
-		var t : FlxTimer  = new FlxTimer(LeftAssistant.GetAnimTimeUntilPotionApears(), function (t:FlxTimer) 
+		var t : FlxTimer  = new FlxTimer(AssistantLeft.GetAnimTimeUntilPotionApears(), function (t:FlxTimer) 
 		{
 			_ingredientCurrent._doDraw = true;
 		} 
@@ -569,12 +565,14 @@ class PlayState extends FlxState
 		
 		var i : Int = Std.int(amount);
 		_money += i;
+		_assistantTop.write();
 	}
 	
 	
 	private function RemoveMoney (amount : Int ) : Void 
 	{
 		_money -= amount;
+		_assistantTop.write();
 	}
 	
 	function CheckMoneyNegative():Void 

@@ -9,7 +9,7 @@ import flixel.FlxSprite;
  * ...
  * @author 
  */
-class LeftAssistant extends FlxObject
+class AssistantLeft extends FlxObject
 {
 	
 	private var _spriteRed :FlxSprite;
