@@ -546,13 +546,28 @@ class PlayState extends FlxState
 	public function setActivePotion (p:Potion, offs:FlxPoint) : Void
 	{
 		_pickedPotion  = p;
-		_pickedPotionOffset = offs;
+		
+		var totalOffset : FlxPoint = new FlxPoint(offs.x, offs.y);
+		
+		// plattform dependent offset (on android, draw the potions some pixels higher
+		#if android
+		totalOffset.y -= GameProperties.Platform_AndroidPickupYOffset;	
+		#end
+		
+		_pickedPotionOffset = totalOffset;
+		
 	}
 	
 	public function setActiveIngredient (i:Ingredient, offs:FlxPoint) : Void 
 	{
 		_pickedIngredient = i;
-		_activeIngredientOffset = offs;
+		var totalOffset : FlxPoint = new FlxPoint(offs.x, offs.y);
+		
+		// plattform dependent offset (on android, draw the potions some pixels higher
+		#if android
+		totalOffset.y -= GameProperties.Platform_AndroidPickupYOffset;	
+		#end
+		_activeIngredientOffset = totalOffset;
 	}
 	
 	// this function calculates the amount of money a patient pays and adds it to the _money var

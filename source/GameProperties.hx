@@ -35,6 +35,7 @@ class GameProperties
 	public static var MoneyStartAmount : Int = 7;
 	
 	public static var Difficulty : DifficultyLevel  = DifficultyLevel.Medium;
+	static public var Platform_AndroidPickupYOffset : Float = 50;
 	
 	
 	//public static var DEBUGDrawHitBoxes : Bool = false;
