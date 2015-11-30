@@ -6,6 +6,7 @@ package ;
 
 enum DifficultyLevel 
 {
+	Tutorial;
 	Easy;
 	Medium;
 	Hard;

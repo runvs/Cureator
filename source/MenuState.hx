@@ -29,11 +29,15 @@ class MenuState extends FlxState
 	private var _btnDDown : FlxButton;
 	private var _difficultyText : FlxSprite;
 	
+	private var _difficultyTutorial : FlxSprite;
 	private var _difficultyEasy : FlxSprite;
 	private var _difficultyMedium : FlxSprite;
 	private var _difficultyHard : FlxSprite;
 	
-	private var _overlay : FlxSprite;
+	private var _musicOnOff : FlxSprite;
+	private var _music : Bool;
+	
+	private var _overlay : FlxSprite;	// for fading the menu in  and out
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -42,7 +46,7 @@ class MenuState extends FlxState
 	{
 		super.create();
 		
-		var difficultyPosY :Int = 224;
+		var difficultyPosY :Int = 214;
 		
 		_background = new FlxSprite();
 		_background.loadGraphic(AssetPaths.opening__png, false, 192, 128);
@@ -54,11 +58,10 @@ class MenuState extends FlxState
 		
 
 		
-		_btn = new FlxButton(550, 324,"", StartGame);
+		_btn = new FlxButton(550, difficultyPosY + 100 ,"", StartGame);
 		_btn.loadGraphic(AssetPaths.button_play__png, false, 48, 16);
 		_btn.scale.set(4, 4);
 		_btn.updateHitbox();
-		//_btn.origin.set();
 		
 		_btnDDown = new FlxButton(137 * 4, difficultyPosY, "", DDown);
 		_btnDDown.loadGraphic(AssetPaths.button_left__png, false, 5, 7);
@@ -77,30 +80,53 @@ class MenuState extends FlxState
 		_difficultyText.y = difficultyPosY;
 		_difficultyText.origin.set(0,-1);
 		
-		
+		var difficultyXPos : Float = 630;
+		_difficultyTutorial = new FlxSprite();
+		_difficultyTutorial.loadGraphic(AssetPaths.button_tutorial__png, false, 45, 11);
+		_difficultyTutorial.scale.set(4, 4);	
+		_difficultyTutorial.x = difficultyXPos;
+		_difficultyTutorial.y = difficultyPosY + 50;
+		_difficultyTutorial.alpha = 0.0;
 		
 		_difficultyEasy = new FlxSprite();
-		_difficultyEasy.loadGraphic(AssetPaths.button_easy__png, false, 39, 11);
+		_difficultyEasy.loadGraphic(AssetPaths.button_easy__png, false, 45, 11);
 		_difficultyEasy.scale.set(4, 4);
-		_difficultyEasy.x = 612;
+		_difficultyEasy.x = difficultyXPos;
 		_difficultyEasy.y = difficultyPosY + 50;
 		_difficultyEasy.alpha = 0.0;
 		
 		_difficultyMedium = new FlxSprite();
-		_difficultyMedium.loadGraphic(AssetPaths.button_normal__png, false, 39, 11);
+		_difficultyMedium.loadGraphic(AssetPaths.button_normal__png, false, 45, 11);
 		_difficultyMedium.scale.set(4, 4);
-		_difficultyMedium.x = 640;
+		_difficultyMedium.x = difficultyXPos;
 		_difficultyMedium.y = difficultyPosY + 50;
 		_difficultyMedium.alpha = 0.0;
 		
 		_difficultyHard = new  FlxSprite();
-		_difficultyHard.loadGraphic(AssetPaths.button_hard__png, false, 39, 11);
+		_difficultyHard.loadGraphic(AssetPaths.button_hard__png, false, 45, 11);
 		_difficultyHard.scale.set(4, 4);
-		_difficultyHard.x = 608;
+		_difficultyHard.x = difficultyXPos;
 		_difficultyHard.y = difficultyPosY + 50;
 		_difficultyHard.alpha = 0.0;
 		
+		_musicOnOff = new FlxSprite();
+		_musicOnOff.loadGraphic(AssetPaths.button_music__png, true, 48, 16);
+		_musicOnOff.scale.set(4, 4);
+		_musicOnOff.updateHitbox();
+		_musicOnOff.x = 550;
+		_musicOnOff.y = difficultyPosY + 180;
+		_musicOnOff.animation.add("on", [0]);
+		_musicOnOff.animation.add("off", [1]);
+		add(_musicOnOff);
 		
+		if (FlxG.sound.muted == true)
+		{
+			_music = false;
+		}
+		else 
+		{
+			_music = true;
+		}
 		
 		#if flash
 		FlxG.sound.playMusic(AssetPaths.cureator_OST_v__02__mp3, 1.0, true);
@@ -120,6 +146,7 @@ class MenuState extends FlxState
 		add(_btnDUp);
 		add (_difficultyText);
 		
+		add(_difficultyTutorial);
 		add(_difficultyEasy);
 		add(_difficultyMedium);
 		add(_difficultyHard);
@@ -130,6 +157,21 @@ class MenuState extends FlxState
 		FlxTween.tween(_overlay, { alpha : 0.0 }, 0.45);
 		add(_overlay);
 		
+	}
+	
+	private function ToggleMusic() : Void 
+	{
+		_music = !_music;
+		if (_music)
+		{
+			_musicOnOff.animation.play("on");
+			FlxG.sound.muted = false;
+		}
+		else 
+		{
+			_musicOnOff.animation.play("off");
+			FlxG.sound.muted = true;
+		}
 	}
 	
 	public function StartGame(): Void 
@@ -147,7 +189,11 @@ class MenuState extends FlxState
 	
 	public function DUp () :Void
 	{
-		if (GameProperties.Difficulty == DifficultyLevel.Easy)
+		if (GameProperties.Difficulty == DifficultyLevel.Tutorial)
+		{
+			GameProperties.Difficulty = DifficultyLevel.Easy;
+		}
+		else if (GameProperties.Difficulty == DifficultyLevel.Easy)
 		{
 			GameProperties.Difficulty = DifficultyLevel.Medium;
 		}
@@ -168,6 +214,10 @@ class MenuState extends FlxState
 		{
 			GameProperties.Difficulty = DifficultyLevel.Easy;
 		}
+		else if (GameProperties.Difficulty == DifficultyLevel.Easy)
+		{
+			GameProperties.Difficulty = DifficultyLevel.Tutorial;
+		}
 	}
 	
 	
@@ -187,10 +237,23 @@ class MenuState extends FlxState
 	override public function update():Void
 	{
 		super.update();
-
+		
+		// difficulty selectors
+		_difficultyTutorial.alpha = (GameProperties.Difficulty == DifficultyLevel.Tutorial) ? 1.0 : 0.0;
 		_difficultyEasy.alpha = (GameProperties.Difficulty == DifficultyLevel.Easy) ? 1.0 : 0.0;
 		_difficultyMedium.alpha = (GameProperties.Difficulty == DifficultyLevel.Medium) ? 1.0 : 0.0;
 		_difficultyHard.alpha = (GameProperties.Difficulty == DifficultyLevel.Hard) ? 1.0 : 0.0;
+		
+		
+		// music button
+		if (FlxG.mouse.justPressed)
+		{
+			if (_musicOnOff.overlapsPoint(FlxG.mouse))
+			{
+				trace ("overlap");
+				ToggleMusic();
+			}
+		}
 		
 	}	
 	
