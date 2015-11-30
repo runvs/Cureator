@@ -36,6 +36,7 @@ class PlayState extends FlxState
 	private var _assistantLeft : AssistantLeft;		// the Assistant holding the ingredients
 	private var _assistantRight : AssistantRight;	// the assistant mixing the potions
 	private var _assistantTop : AssistantTop;			// the assistant writing the numbers
+	private var _assistantBack2Menu : AssistantBack2Menu;
 	
 	private var _actionCounter : Int;	// how many actions have been passed since the patients moved forward?
 	
@@ -65,7 +66,7 @@ class PlayState extends FlxState
 		super.create();
 		
 		_backgroundSprite = new FlxSprite();
-		_backgroundSprite.loadGraphic(AssetPaths.background_v2__png, false, 192, 128);
+		_backgroundSprite.loadGraphic(AssetPaths.background_v3__png, false, 192, 128);
 		_backgroundSprite.scale.set(4, 4);
 		_backgroundSprite.origin.set();
 		
@@ -97,6 +98,8 @@ class PlayState extends FlxState
 		_assistantLeft = new AssistantLeft();
 		_assistantRight = new AssistantRight();
 		_assistantTop = new AssistantTop();
+		_assistantBack2Menu = new AssistantBack2Menu(this);
+		
 		
 		_recipe = new RecipeDrawer();
 		
@@ -171,6 +174,9 @@ class PlayState extends FlxState
 		
 		_assistantTop.destroy();
 		_assistantTop = null;
+		
+		_assistantBack2Menu.destroy();	
+		_assistantBack2Menu = null;
 
 		_moneyText = null;
 		_moneyNeededText = null;
@@ -247,6 +253,7 @@ class PlayState extends FlxState
 			_assistantLeft.update();
 			_assistantRight.update();
 			_assistantTop.update();
+			_assistantBack2Menu.update();
 		
 			_listPatients.update();
 			_listPotions.update();
@@ -498,8 +505,15 @@ class PlayState extends FlxState
 	{
 		// create a draworder for all the sprites in this scene
 		
+
+		
 		// backbround
 		_backgroundSprite.draw();
+		
+		_assistantLeft.draw();
+		_assistantRight.draw();		
+		_assistantTop.draw();
+		_assistantBack2Menu.draw();
 		
 		// objects
 		_fluids.draw();
@@ -507,14 +521,11 @@ class PlayState extends FlxState
 		_listPatients.draw();
 		_listPotions.draw();
 		
-		_assistantLeft.draw();
-		_assistantRight.draw();
+
 		
 		_ingredientCurrent.draw();
 		_ingredientNext.draw();
-		
-		_assistantTop.draw();
-		
+
 		// hud/gui overlays
 		_recipe.draw();
 		

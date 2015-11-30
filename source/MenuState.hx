@@ -4,9 +4,12 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
+import flixel.tweens.FlxTween;
 import flixel.ui.FlxButton;
+import flixel.util.FlxColor;
 import flixel.util.FlxColorUtil;
 import flixel.util.FlxMath;
+import flixel.util.FlxTimer;
 
 using flixel.util.FlxSpriteUtil;
 
@@ -29,6 +32,8 @@ class MenuState extends FlxState
 	private var _difficultyEasy : FlxSprite;
 	private var _difficultyMedium : FlxSprite;
 	private var _difficultyHard : FlxSprite;
+	
+	private var _overlay : FlxSprite;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -120,14 +125,24 @@ class MenuState extends FlxState
 		add(_difficultyHard);
 		
 		add(_vignette);
+		_overlay = new FlxSprite();
+		_overlay.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		FlxTween.tween(_overlay, { alpha : 0.0 }, 0.45);
+		add(_overlay);
 		
 	}
 	
 	public function StartGame(): Void 
 	{
-		var p : PlayState = new PlayState();
-		p.SetLevel(0);
-		FlxG.switchState(p);
+		FlxTween.tween(_overlay, { alpha : 1.0 }, 0.45);
+		var t : FlxTimer = new FlxTimer(0.45, function ( t : FlxTimer)
+		{
+			var p : PlayState = new PlayState();
+			p.SetLevel(0);
+			
+			FlxG.switchState(p);	
+		});
+		
 	}
 	
 	public function DUp () :Void
