@@ -38,7 +38,7 @@ class Ingredient  extends FlxObject
 		_sprite = new FlxSprite(0, 0);
 		_sprite = GetSpriteFromColor(_col);
 		_hitBox = new FlxSprite(0, 0);
-		_hitBox.makeGraphic(64, 64, FlxColorUtil.makeFromARGB(0,100,100,100));
+		_hitBox.makeGraphic(64, 64 + Std.int(GameProperties.Platform_AndroidPickupYOffset), FlxColorUtil.makeFromARGB(0,100,100,100));
 		
 	}
 	

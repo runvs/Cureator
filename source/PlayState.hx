@@ -647,6 +647,17 @@ class PlayState extends FlxState
 	function DrawRecipeTooltip():Void 
 	{
 		_recipe.alpha = 0.0;
+		
+		for ( i in 0..._listPotions.length)
+		{
+			var p : Potion = _listPotions.members[i];
+			if (p._hitBox.overlapsPoint(FlxG.mouse))
+			{
+					_recipe.alpha = 1.0;
+					_recipe.DrawColorPotion(p);
+			}
+		}
+		
 		// check any of the Patients
 		for ( i in 0 ... _listPatients.length)
 		{
@@ -656,11 +667,9 @@ class PlayState extends FlxState
 				if (p._hitBox.overlapsPoint(FlxG.mouse))
 				{
 					_recipe.alpha = 1.0;
-					_recipe.DrawColor(p);
+					_recipe.DrawColorPatient(p);
 				}
 			}
 		}
-	}
-	
-	
+	}	
 }

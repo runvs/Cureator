@@ -71,7 +71,8 @@ class Patient extends FlxObject
 		
 		x = GameProperties.PatientSpawnPosition.x;
 		y = GameProperties.PatientSpawnPosition.y;
-		
+		_sprite.x = x;
+		_sprite.y = y;
 		
 		
 		_speechbubble = new FlxSprite();

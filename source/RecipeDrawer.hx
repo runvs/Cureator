@@ -42,11 +42,10 @@ class RecipeDrawer extends FlxSprite
 		
 	}
 	
-	public function DrawColor(p:Patient)
+	private function DrawColor(c : Color, f : FillState)
 	{
-		var c : Color = p._col;
-		var f : FillState = p._neededFillState;
-		var fi : Int = 0;
+		var animString :String = "";
+		var fi : Int = 1;
 		if (f == FillState.One)
 		{	
 			fi = 1;
@@ -59,7 +58,7 @@ class RecipeDrawer extends FlxSprite
 		{	
 			fi = 3;
 		}
-		var animString :String = "";
+		
 		if (c == Color.Red)
 		{
 			animString = "red" + Std.string(fi);
@@ -110,6 +109,24 @@ class RecipeDrawer extends FlxSprite
 		}
 		
 		animation.play(animString, true);
+	}
+	
+	public function DrawColorPotion(p:Potion)
+	{
+		var c : Color = p._col;
+		var f : FillState = p._fill;
+		DrawColor(c, f);
+	}
+	
+	
+	
+	public function DrawColorPatient(p:Patient)
+	{
+		var c : Color = p._col;
+		var f : FillState = p._neededFillState;
+		
+		DrawColor(c, f);
+		
 	}
 	
 }
