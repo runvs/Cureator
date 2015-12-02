@@ -670,6 +670,6 @@ class PlayState extends FlxState
 					_recipe.DrawColorPatient(p);
 				}
 			}
-		}
+		}  
 	}	
 }
