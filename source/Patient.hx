@@ -197,24 +197,43 @@ class Patient extends FlxObject
 	private function PickRandomPatientAndLoadSprite() : Void
 	{
 		var p : PatientDescriptor = null;
+		
 		if (GameProperties.Difficulty == DifficultyLevel.Easy)
 		{
-			p = _picker.RandomPatientWithFillstate(FillState.One);
-		}
-		else if (GameProperties.Difficulty == DifficultyLevel.Medium)
-		{
-			if (FlxRandom.chanceRoll())
+			trace("spawn easy");
+			if (FlxRandom.chanceRoll(15))
 			{
-				p = _picker.RandomPatientWithFillstate(FillState.One);
+				p = _picker.RandomPatientWithDifficultyUpTo(3);
 			}
 			else
 			{
-				p = _picker.RandomPatientWithFillstate(FillState.Two);
+				p = _picker.RandomPatientWithDifficultyUpTo(2);
 			}
+		}
+		else if (GameProperties.Difficulty == DifficultyLevel.Medium)
+		{
+			trace("spawn medium");
+			if (FlxRandom.chanceRoll(20))
+			{
+				p = _picker.RandomPatientWithDifficultyUpTo(4);
+			}
+			else
+			{
+				p = _picker.RandomPatientWithDifficultyUpTo(3);
+			}
+		
 		}
 		else
 		{
-			p = _picker.RandomPatient();
+			trace("spawn hard");
+			if (FlxRandom.chanceRoll(50))
+			{
+				p = _picker.RandomPatientWithDifficultyUpTo(4);
+			}
+			else
+			{
+				p = _picker.RandomPatientWithDifficultyUpTo(5);
+			}
 		}
 
 		_col = p._color;

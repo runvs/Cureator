@@ -7,19 +7,19 @@ package ;
 enum Color 
 {
 	None;
-	Red;
-	Green;
-	Blue;
+	Red;		//
+	Green;		//
+	Blue;		//
 	
-	Yellow;		// Red + Green
-	Orange;		// Red + Red + Green
+	Yellow;		// Red + Green			//
+	Orange;		// Red + Red + Green	
 	YellowGreen;// Red + Green + Green
 	
-	Magenta;	// Red + Blue
+	Magenta;	// Red + Blue			//
 	Pink;		// Red + Red + Blue
 	Purple;		// Red + Blue + Blue
 
-	Cyan;		// Green + Blue
+	Cyan;		// Green + Blue			//
 	SeaGreen;	// Green + Green + Blue
 	Skyblue;	// Green + Blue + Blue
 	

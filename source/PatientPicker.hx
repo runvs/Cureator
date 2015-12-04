@@ -34,6 +34,7 @@ class PatientPicker
 		p._color = Color.Red;
 		p._name = "assets/images/patient_soldier.png";
 		p._frame = [1];
+		p._difficulty  = 1;
 		list.add(p);
 		
 		//-------------------------------------
@@ -44,6 +45,7 @@ class PatientPicker
 		p._color = Color.Green;
 		p._name = "assets/images/patient_imp.png";
 		p._frame = [2];
+		p._difficulty  = 1;
 		list.add(p);
 		
 		p = new PatientDescriptor();
@@ -51,6 +53,7 @@ class PatientPicker
 		p._color = Color.Green;
 		p._name = "assets/images/patient_soldier.png";
 		p._frame = [2];
+		p._difficulty  = 1;
 		list.add(p);
 		
 		//-------------------------------------
@@ -61,6 +64,7 @@ class PatientPicker
 		p._color = Color.Blue;
 		p._name = "assets/images/patient_soldier.png";
 		p._frame = [3];
+		p._difficulty  = 1;
 		list.add(p);
 		
 		p = new PatientDescriptor();
@@ -68,19 +72,8 @@ class PatientPicker
 		p._color = Color.Blue;
 		p._name = "assets/images/patient_imp.png";
 		p._frame = [1];
+		p._difficulty  = 1;
 		list.add(p);
-		
-		//-------------------------------------
-		//	L1 Pink
-		//-------------------------------------
-		p = new PatientDescriptor();
-		p._fill = FillState.One;
-		p._color = Color.Pink;
-		p._name = "assets/images/patient_imp.png";
-		p._frame = [3];
-		list.add(p);
-		
-		
 		
 		
 		///////////////////////////////////////
@@ -95,6 +88,7 @@ class PatientPicker
 		p._color = Color.Red;
 		p._name = "assets/images/patient_archer.png";
 		p._frame = [1];
+		p._difficulty  = 2;
 		list.add(p);
 		
 		p = new PatientDescriptor();
@@ -102,6 +96,7 @@ class PatientPicker
 		p._color = Color.Red;
 		p._name = "assets/images/patient_peasant.png";
 		p._frame = [1];
+		p._difficulty  = 2;
 		list.add(p);
 		
 		//-------------------------------------
@@ -112,6 +107,7 @@ class PatientPicker
 		p._color = Color.Blue;
 		p._name = "assets/images/patient_archer.png";
 		p._frame = [3];
+		p._difficulty  = 2;
 		list.add(p);
 		
 		//-------------------------------------
@@ -119,9 +115,10 @@ class PatientPicker
 		//-------------------------------------
 		p = new PatientDescriptor();
 		p._fill = FillState.Two;
-		p._color = Color.Orange;
+		p._color = Color.Orange;	
 		p._name = "assets/images/patient_archer.png";
 		p._frame = [2];
+		p._difficulty  = 3;
 		list.add(p);
 		
 		//-------------------------------------
@@ -132,6 +129,7 @@ class PatientPicker
 		p._color = Color.YellowGreen;
 		p._name = "assets/images/patient_peasant.png";
 		p._frame = [3];
+		p._difficulty  = 5;
 		list.add(p);
 		
 		//-------------------------------------
@@ -139,9 +137,10 @@ class PatientPicker
 		//-------------------------------------
 		p = new PatientDescriptor();
 		p._fill = FillState.Two;
-		p._color = Color.Magenta;
+		p._color = Color.Pruple;
 		p._name = "assets/images/patient_peasant.png";
 		p._frame = [4];
+		p._difficulty  = 5;
 		list.add(p);
 		
 		//-------------------------------------
@@ -152,6 +151,7 @@ class PatientPicker
 		p._color = Color.SeaGreen;
 		p._name = "assets/images/patient_peasant.png";
 		p._frame = [2];
+		p._difficulty  = 6;
 		list.add(p);
 		
 		///////////////////////////////////////
@@ -166,6 +166,7 @@ class PatientPicker
 		p._color = Color.Red;
 		p._name = "assets/images/patient_troll.png";
 		p._frame = [1];
+		p._difficulty  = 4;
 		list.add(p);
 		
 		//-------------------------------------
@@ -176,6 +177,18 @@ class PatientPicker
 		p._color = Color.Green;
 		p._name = "assets/images/patient_troll.png";
 		p._frame = [3];
+		p._difficulty  = 4;
+		list.add(p);
+		
+		//-------------------------------------
+		//	L3 Pink
+		//-------------------------------------
+		p = new PatientDescriptor();
+		p._fill = FillState.Three;
+		p._color = Color.Pink;
+		p._name = "assets/images/patient_imp.png";
+		p._frame = [3];
+		p._difficulty  = 5;
 		list.add(p);
 		
 		//-------------------------------------
@@ -186,6 +199,7 @@ class PatientPicker
 		p._color = Color.Yellow;
 		p._name = "assets/images/patient_priest.png";
 		p._frame = [2];
+		p._difficulty  = 3;
 		list.add(p);
 		
 		//-------------------------------------
@@ -196,6 +210,7 @@ class PatientPicker
 		p._color = Color.Magenta;
 		p._name = "assets/images/patient_priest.png";
 		p._frame = [3];
+		p._difficulty  = 3;
 		list.add(p);
 		
 		//-------------------------------------
@@ -206,6 +221,7 @@ class PatientPicker
 		p._color = Color.Purple;
 		p._name = "assets/images/patient_troll.png";
 		p._frame = [2];
+		p._difficulty  = 5;
 		list.add(p);
 		
 		//-------------------------------------
@@ -216,6 +232,7 @@ class PatientPicker
 		p._color = Color.Cyan;
 		p._name = "assets/images/patient_priest.png";
 		p._frame = [1];
+		p._difficulty  = 5;
 		list.add(p);
 		
 	}
@@ -227,10 +244,11 @@ class PatientPicker
 	}
 	
 	
-	public function RandomPatientWithFillstate (f : FillState) : PatientDescriptor
+	public function RandomPatientWithDifficultyUpTo (d : Int) : PatientDescriptor
 	{
+		trace("spawn d: " + d);
 		var p : PatientDescriptor = RandomPatient();
-		while (p._fill != f)
+		while (p._difficulty > d)
 		{
 			p = RandomPatient();
 		}
