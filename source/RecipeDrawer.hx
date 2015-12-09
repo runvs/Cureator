@@ -37,9 +37,6 @@ class RecipeDrawer extends FlxSprite
 		animation.add("purple", [12], 6, true);
 		animation.add("seagreen", [13], 6, true);
 		animation.add("skyblue", [14], 6, true);
-		
-		
-		
 	}
 	
 	private function DrawColor(c : Color, f : FillState)

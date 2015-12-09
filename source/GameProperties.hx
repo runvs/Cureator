@@ -37,7 +37,9 @@ class GameProperties
 	public static var SelectedDifficulty : DifficultyLevel  = DifficultyLevel.Medium;	// difficulty selected by the player
 	public static var Level : Int = 0;
 	
-	static public var Platform_AndroidPickupYOffset : Float = 50;
+	public static var SpawnChanceCorrectPotion : Float = 75;
+	
+	public static var Platform_AndroidPickupYOffset : Float = 50;
 	
 	
 	//public static var DEBUGDrawHitBoxes : Bool = false;

@@ -445,21 +445,127 @@ class PlayState extends FlxState
 	public function SpawnNewIngredient():Void
 	{
 		var c : Color;
+		var r : Int = 0;
+		// 
+		if (FlxRandom.chanceRoll(100 - GameProperties.SpawnChanceCorrectPotion))
+		{
+			r = FlxRandom.intRanged(0, 2);
+			if ( r == 0)
+			{
+				c = Color.Red;
+			}
+			else if (r == 1)
+			{
+				c = Color.Green;
+			}
+			else 
+			{
+				c = Color.Blue;
+			}
+		}
+		else
+		{
+			var l  : Array<Color> = new Array<Color>();
+			for (i in 0..._listPatients.length)
+			{
+				var p : Patient = _listPatients.members[i];
+				if (!p.alive)
+					continue;
+				if (p._status == PatientStatus.GoingOut)
+					continue;
+				var c2 : Color = p._col;
+				var f : FillState = p._neededFillState;
+				var fi : Int = 1;
+				if (f == FillState.One)
+				{	
+					fi = 1;
+				}
+				else if (f == FillState.Two)
+				{	
+					fi = 2;
+				}
+				else if (f == FillState.Three)
+				{	
+					fi = 3;
+				}
+				if (c2 == Color.Red|| c2 == Color.Green || c2 == Color.Blue)
+				{
+					for (j in 0...fi)
+					{
+						l.push(c2);
+					}
+				}
+				if (c2 == Color.Yellow)
+				{
+					l.push(Color.Red);
+					l.push(Color.Green);
+				}
+				if (c2 == Color.Orange)
+				{
+					l.push(Color.Red);
+					l.push(Color.Red);
+					l.push(Color.Green);
+				}
+				if (c2 == Color.YellowGreen)
+				{
+					l.push(Color.Red);
+					l.push(Color.Green);
+					l.push(Color.Green);
+				}
+				
+				if (c2 == Color.Magenta)
+				{
+					l.push(Color.Red);
+					l.push(Color.Blue);
+				}
+				if (c2 == Color.Pink)
+				{
+					l.push(Color.Red);
+					l.push(Color.Red);
+					l.push(Color.Blue);
+				}
+				if (c2 == Color.Purple)
+				{
+					l.push(Color.Red);
+					l.push(Color.Blue);
+					l.push(Color.Blue);
+				}
+				
+				if (c2 == Color.Cyan)
+				{
+					l.push(Color.Green);
+					l.push(Color.Blue);
+				}
+				if (c2 == Color.SeaGreen)
+				{
+					l.push(Color.Green);
+					l.push(Color.Green);
+					l.push(Color.Blue);
+				}
+				if (c2 == Color.Skyblue)
+				{
+					l.push(Color.Green);
+					l.push(Color.Blue);
+					l.push(Color.Blue);
+				}
+				
+			}
+			
+			for (i in 0...l.length)
+			{
+				trace(l[i]);
+			}
+			
+			r = FlxRandom.intRanged(0, l.length-1);
+			trace(r + " " + l[r]);
+			c = l[r];
+			
+		}
 		
-		var r : Int = FlxRandom.intRanged(0, 2);
 		
-		if ( r == 0)
-		{
-			c = Color.Red;
-		}
-		else if (r == 1)
-		{
-			c = Color.Green;
-		}
-		else 
-		{
-			c = Color.Blue;
-		}
+		
+		
+	
 		
 		_assistantLeft.Pick(_ingredientNext._col);
 		RemoveMoney(GameProperties.MoneyIngredientCost);
