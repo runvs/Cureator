@@ -43,6 +43,8 @@ class PlayState extends FlxState
 	private var _money : Int;	// current amount of money
 	private var _moneyText : MoneyDisplay;	// current money display
 	
+	private var _levelText : MoneyDisplay;	// displays the current level
+	
 	private var _moneyNeeded :Int;	// money needed to complete the current level
 	private var _moneyNeededText : MoneyDisplay;
 	
@@ -109,6 +111,9 @@ class PlayState extends FlxState
 		
 		_moneyText = new MoneyDisplay(false);
 		_moneyNeededText  = new MoneyDisplay(true);
+		
+		_levelText = new MoneyDisplay(true);
+
 		
 		_fluids = new Fluids();
 		_fluids.SetLeftColor(_ingredientCurrent._col);
@@ -179,6 +184,7 @@ class PlayState extends FlxState
 
 		_moneyText = null;
 		_moneyNeededText = null;
+		_levelText = null;
 		
 		_screenOverlay.destroy();
 		_screenOverlay = null;
@@ -630,6 +636,7 @@ class PlayState extends FlxState
 		
 		_moneyText.drawSingleNumber(_money, new FlxPoint(412, 16));
 		_moneyNeededText.drawSingleNumber(_moneyNeeded, new FlxPoint(468, 92));
+		_levelText.drawSingleNumber(GameProperties.Level, new FlxPoint(602, 98));
 		
 		// visual effects
 		_screenOverlay.draw();
@@ -730,7 +737,10 @@ class PlayState extends FlxState
 			{
 				var p: PlayState = new PlayState();
 				GameProperties.Level += 1;
+				if (GameProperties.Level >= 5)
+				GameProperties.SpawnChanceCorrectPotion = 75 - 10 * (GameProperties.Level - 4);
 				p.SetLevel();
+				
 				FlxG.switchState(p);
 			});
 		}

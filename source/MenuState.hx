@@ -192,6 +192,7 @@ class MenuState extends FlxState
 			{
 				GameProperties.Level = 4;
 			}
+			GameProperties.SpawnChanceCorrectPotion = GameProperties.SpawnChanceCorrectPotionBase;
 			p.SetLevel();
 			FlxG.switchState(p);	
 		});
