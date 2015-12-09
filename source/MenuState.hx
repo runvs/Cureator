@@ -180,8 +180,19 @@ class MenuState extends FlxState
 		var t : FlxTimer = new FlxTimer(0.45, function ( t : FlxTimer)
 		{
 			var p : PlayState = new PlayState();
-			p.SetLevel(0);
-			
+			if (GameProperties.SelectedDifficulty == DifficultyLevel.Easy)
+			{
+				GameProperties.Level = 0;
+			}
+			if (GameProperties.SelectedDifficulty == DifficultyLevel.Medium)
+			{
+				GameProperties.Level = 2;
+			}
+			if (GameProperties.SelectedDifficulty == DifficultyLevel.Hard)
+			{
+				GameProperties.Level = 4;
+			}
+			p.SetLevel();
 			FlxG.switchState(p);	
 		});
 		
@@ -189,34 +200,34 @@ class MenuState extends FlxState
 	
 	public function DUp () :Void
 	{
-		if (GameProperties.Difficulty == DifficultyLevel.Tutorial)
+		if (GameProperties.SelectedDifficulty == DifficultyLevel.Tutorial)
 		{
-			GameProperties.Difficulty = DifficultyLevel.Easy;
+			GameProperties.SelectedDifficulty = DifficultyLevel.Easy;
 		}
-		else if (GameProperties.Difficulty == DifficultyLevel.Easy)
+		else if (GameProperties.SelectedDifficulty == DifficultyLevel.Easy)
 		{
-			GameProperties.Difficulty = DifficultyLevel.Medium;
+			GameProperties.SelectedDifficulty = DifficultyLevel.Medium;
 		}
-		else if (GameProperties.Difficulty == DifficultyLevel.Medium)
+		else if (GameProperties.SelectedDifficulty == DifficultyLevel.Medium)
 		{
-			GameProperties.Difficulty = DifficultyLevel.Hard;
+			GameProperties.SelectedDifficulty = DifficultyLevel.Hard;
 		}
 		
 	}
 	
 	public function DDown () : Void
 	{
-		if (GameProperties.Difficulty == DifficultyLevel.Hard)
+		if (GameProperties.SelectedDifficulty == DifficultyLevel.Hard)
 		{
-			GameProperties.Difficulty = DifficultyLevel.Medium;
+			GameProperties.SelectedDifficulty = DifficultyLevel.Medium;
 		}
-		else if (GameProperties.Difficulty == DifficultyLevel.Medium)
+		else if (GameProperties.SelectedDifficulty == DifficultyLevel.Medium)
 		{
-			GameProperties.Difficulty = DifficultyLevel.Easy;
+			GameProperties.SelectedDifficulty = DifficultyLevel.Easy;
 		}
-		else if (GameProperties.Difficulty == DifficultyLevel.Easy)
+		else if (GameProperties.SelectedDifficulty == DifficultyLevel.Easy)
 		{
-			GameProperties.Difficulty = DifficultyLevel.Tutorial;
+			GameProperties.SelectedDifficulty = DifficultyLevel.Tutorial;
 		}
 	}
 	
@@ -239,10 +250,10 @@ class MenuState extends FlxState
 		super.update();
 		
 		// difficulty selectors
-		_difficultyTutorial.alpha = (GameProperties.Difficulty == DifficultyLevel.Tutorial) ? 1.0 : 0.0;
-		_difficultyEasy.alpha = (GameProperties.Difficulty == DifficultyLevel.Easy) ? 1.0 : 0.0;
-		_difficultyMedium.alpha = (GameProperties.Difficulty == DifficultyLevel.Medium) ? 1.0 : 0.0;
-		_difficultyHard.alpha = (GameProperties.Difficulty == DifficultyLevel.Hard) ? 1.0 : 0.0;
+		_difficultyTutorial.alpha = (GameProperties.SelectedDifficulty == DifficultyLevel.Tutorial) ? 1.0 : 0.0;
+		_difficultyEasy.alpha = (GameProperties.SelectedDifficulty == DifficultyLevel.Easy) ? 1.0 : 0.0;
+		_difficultyMedium.alpha = (GameProperties.SelectedDifficulty == DifficultyLevel.Medium) ? 1.0 : 0.0;
+		_difficultyHard.alpha = (GameProperties.SelectedDifficulty == DifficultyLevel.Hard) ? 1.0 : 0.0;
 		
 		
 		// music button

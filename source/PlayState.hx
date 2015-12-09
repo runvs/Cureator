@@ -43,7 +43,6 @@ class PlayState extends FlxState
 	private var _money : Int;	// current amount of money
 	private var _moneyText : MoneyDisplay;	// current money display
 	
-	private var _level : Int;	// current level. must be zero or positive
 	private var _moneyNeeded :Int;	// money needed to complete the current level
 	private var _moneyNeededText : MoneyDisplay;
 	
@@ -195,14 +194,8 @@ class PlayState extends FlxState
 	
 	}
 
-	public function SetLevel(level:Int)
+	public function SetLevel()
 	{
-		if (level < 0)
-		{
-			throw ("error: Level negative");
-		}
-		_level = level;
-		
 		CalculateMoneyFromLevel();
 	}
 	
@@ -587,7 +580,7 @@ class PlayState extends FlxState
 		amount *= factor;
 		
 		var chair : Float = p._chair;
-		amount /= 0.5 + (0.5*chair);
+		amount /= 0.75 + (0.25*chair);
 		
 		var i : Int = Std.int(amount);
 		_money += i;
@@ -630,7 +623,8 @@ class PlayState extends FlxState
 			var t:FlxTimer = new FlxTimer(1.25, function (t:FlxTimer) : Void 
 			{
 				var p: PlayState = new PlayState();
-				p.SetLevel(_level +1);
+				GameProperties.Level += 1;
+				p.SetLevel();
 				FlxG.switchState(p);
 			});
 		}
@@ -638,10 +632,10 @@ class PlayState extends FlxState
 	
 	function CalculateMoneyFromLevel():Void 
 	{
-		var moneyIncrease: Int = 5;
-		var moneyStart : Int = 12;
+		var moneyIncrease: Int = 2;
+		var moneyStart : Int = 11;
 		
-		_moneyNeeded = moneyIncrease * _level  + moneyStart;
+		_moneyNeeded = moneyIncrease * GameProperties.Level  + moneyStart;
 	}
 	
 	function DrawRecipeTooltip():Void 

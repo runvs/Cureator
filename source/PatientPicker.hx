@@ -137,7 +137,7 @@ class PatientPicker
 		//-------------------------------------
 		p = new PatientDescriptor();
 		p._fill = FillState.Two;
-		p._color = Color.Pruple;
+		p._color = Color.Purple;
 		p._name = "assets/images/patient_peasant.png";
 		p._frame = [4];
 		p._difficulty  = 5;
@@ -246,7 +246,7 @@ class PatientPicker
 	
 	public function RandomPatientWithDifficultyUpTo (d : Int) : PatientDescriptor
 	{
-		trace("spawn d: " + d);
+		//trace("spawn d: " + d);
 		var p : PatientDescriptor = RandomPatient();
 		while (p._difficulty > d)
 		{

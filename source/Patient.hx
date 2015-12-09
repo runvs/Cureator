@@ -198,41 +198,44 @@ class Patient extends FlxObject
 	{
 		var p : PatientDescriptor = null;
 		
-		if (GameProperties.Difficulty == DifficultyLevel.Easy)
+		var lh : Int = Math.floor(GameProperties.Level / 2);
+		
+		if (GameProperties.SelectedDifficulty == DifficultyLevel.Easy)
 		{
-			trace("spawn easy");
+			
+			//trace("spawn easy");
 			if (FlxRandom.chanceRoll(15))
 			{
-				p = _picker.RandomPatientWithDifficultyUpTo(3);
+				p = _picker.RandomPatientWithDifficultyUpTo(3 + lh);
 			}
 			else
 			{
-				p = _picker.RandomPatientWithDifficultyUpTo(2);
+				p = _picker.RandomPatientWithDifficultyUpTo(2 + lh);
 			}
 		}
-		else if (GameProperties.Difficulty == DifficultyLevel.Medium)
+		else if (GameProperties.SelectedDifficulty == DifficultyLevel.Medium)
 		{
-			trace("spawn medium");
+			//trace("spawn medium");
 			if (FlxRandom.chanceRoll(20))
 			{
-				p = _picker.RandomPatientWithDifficultyUpTo(4);
+				p = _picker.RandomPatientWithDifficultyUpTo(4 + lh);
 			}
 			else
 			{
-				p = _picker.RandomPatientWithDifficultyUpTo(3);
+				p = _picker.RandomPatientWithDifficultyUpTo(3 + lh);
 			}
 		
 		}
 		else
 		{
-			trace("spawn hard");
+			//trace("spawn hard");
 			if (FlxRandom.chanceRoll(50))
 			{
-				p = _picker.RandomPatientWithDifficultyUpTo(4);
+				p = _picker.RandomPatientWithDifficultyUpTo(4 + lh);
 			}
 			else
 			{
-				p = _picker.RandomPatientWithDifficultyUpTo(5);
+				p = _picker.RandomPatientWithDifficultyUpTo(5 + lh);
 			}
 		}
 

@@ -34,7 +34,9 @@ class GameProperties
 	public static var MoneyIngredientCost : Int = 1;
 	public static var MoneyStartAmount : Int = 7;
 	
-	public static var Difficulty : DifficultyLevel  = DifficultyLevel.Medium;
+	public static var SelectedDifficulty : DifficultyLevel  = DifficultyLevel.Medium;	// difficulty selected by the player
+	public static var Level : Int = 0;
+	
 	static public var Platform_AndroidPickupYOffset : Float = 50;
 	
 	
